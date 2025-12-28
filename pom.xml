@@ -13,19 +13,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.organization>matteo-marcoccia</sonar.organization>
         <sonar.projectKey>Matteo-Marcoccia_ISPW-Project</sonar.projectKey>
+        <!-- Escludiamo Main dalla coverage perché è solo l'entry point -->
+        <sonar.coverage.exclusions>**/Main.java</sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>21.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>21.0.2</version>
-        </dependency>
         <!-- JUnit 5 per i test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
