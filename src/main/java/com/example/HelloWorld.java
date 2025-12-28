@@ -10,15 +10,16 @@ public class HelloWorld extends Application {
 
     @Override
     public void start(Stage stage) {
-        String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
-        Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
+        Label l = new Label(getGreeting());
         Scene scene = new Scene(new StackPane(l), 640, 480);
         stage.setScene(scene);
         stage.show();
     }
 
-    public static void main(String[] args) {
-        launch();
+    // Metodo separato per facilitare il test
+    public String getGreeting() {
+        String javaVersion = System.getProperty("java.version");
+        String javafxVersion = System.getProperty("javafx.version");
+        return "Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".";
     }
 }
