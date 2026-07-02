@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: linear-gradient(to bottom right, #6200EE, #E61C5D);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.questtable.view.controller.SchermataHomeController">
+    <children>
+
+        <HBox alignment="CENTER_RIGHT" layoutX="30.0" layoutY="20.0" prefHeight="45.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+   <children>
+      <Label text="QuestTable" textFill="WHITE" HBox.hgrow="ALWAYS">
+         <font>
+            <Font name="Segoe UI Bold" size="18.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="15.0" HBox.hgrow="ALWAYS">
+         <children>
+            
+
+            <Button fx:id="btnAccedi" mnemonicParsing="false" onAction="#onAccediClick" style="-fx-background-color: rgba(255, 255, 255, 0.15); -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.3); -fx-border-radius: 20; -fx-border-width: 1; -fx-padding: 6 16 6 16; -fx-cursor: hand;" text="â†’ Accedi">
+               <font>
+                  <Font name="Segoe UI Bold" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnProfiloUtente" managed="false" mnemonicParsing="false" onAction="#onProfiloUtenteClick" style="-fx-background-color: rgba(255, 255, 255, 0.15); -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.3); -fx-border-radius: 20; -fx-border-width: 1; -fx-padding: 6 16 6 16; -fx-cursor: hand;" visible="false">
+               <font>
+                  <Font name="Segoe UI Bold" size="13.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</HBox>
+
+        <VBox alignment="CENTER" spacing="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="70.0">
+            <children>
+
+                <VBox alignment="CENTER" spacing="5.0">
+                    <children>
+                        <Label text="QuestTable" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="44.0" />
+                            </font>
+                        </Label>
+                        <Label text="Il tuo spazio per giocare, condividere e divertirti" textFill="WHITE">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="10.0" />
+                    </VBox.margin>
+                </VBox>
+
+                <HBox alignment="CENTER" spacing="25.0">
+                    <children>
+
+                        <VBox fx:id="boxPrenota" prefHeight="260.0" prefWidth="310.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);">
+                            <children>
+                                <StackPane alignment="CENTER" maxHeight="46.0" maxWidth="46.0" prefHeight="46.0" prefWidth="46.0">
+                                    <children>
+                                        <Rectangle arcHeight="14.0" arcWidth="14.0" fill="#9C27B0" height="44.0" width="44.0" />
+                                        <SVGPath content="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z" fill="WHITE" scaleX="0.9" scaleY="0.9" />
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="24.0" />
+                                    </VBox.margin>
+                                </StackPane>
+
+                                <Label text="Prenota un Tavolo" textFill="#1A1A1A">
+                                    <font>
+                                        <Font name="System Bold" size="20.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="15.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <Label prefHeight="40.0" prefWidth="260.0" text="Riserva il tuo posto al tavolo per una serata di giochi indimenticabile" textFill="#555555" wrapText="true">
+                                    <font>
+                                        <Font size="12.5" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="8.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <Button mnemonicParsing="false" onAction="#onPrenotaOraClick" prefHeight="36.0" prefWidth="262.0" style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;" text="Prenota Ora">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="25.0" />
+                                    </VBox.margin>
+                                </Button>
+                            </children>
+                        </VBox>
+
+                        <VBox fx:id="boxShop" prefHeight="260.0" prefWidth="310.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);">
+                            <children>
+                                <StackPane alignment="CENTER" maxHeight="46.0" maxWidth="46.0" prefHeight="46.0" prefWidth="46.0">
+                                    <children>
+                                        <Rectangle arcHeight="14.0" arcWidth="14.0" fill="#1976D2" height="44.0" width="44.0" />
+                                        <SVGPath content="M12 2C10.34 2 9 3.34 9 5H4v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V5h-5c0-1.66-1.34-3-3-3zm0 2c.55 0 1 .45 1 1h-2c0-.55.45-1 1-1zm6 15H6V7h12v12z" fill="WHITE" scaleX="0.9" scaleY="0.9" />
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="24.0" />
+                                    </VBox.margin>
+                                </StackPane>
+
+                                <Label text="Acquista Giochi" textFill="#1A1A1A">
+                                    <font>
+                                        <Font name="System Bold" size="20.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="15.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <Label prefHeight="40.0" prefWidth="260.0" text="Scopri la nostra collezione di giochi da tavolo e porta a casa i tuoi preferiti" textFill="#555555" wrapText="true">
+                                    <font>
+                                        <Font size="12.5" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="8.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <Button mnemonicParsing="false" onAction="#onVaiAlloShopClick" prefHeight="36.0" prefWidth="262.0" style="-fx-background-color: #1976D2; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;" text="Vai allo Shop">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="25.0" />
+                                    </VBox.margin>
+                                </Button>
+                            </children>
+                        </VBox>
+
+                        <VBox fx:id="boxGestore" managed="false" prefHeight="260.0" prefWidth="310.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);" visible="false">
+                            <children>
+                                <StackPane alignment="CENTER" maxHeight="46.0" maxWidth="46.0" prefHeight="46.0" prefWidth="46.0">
+                                    <children>
+                                        <Rectangle arcHeight="14.0" arcWidth="14.0" fill="#B24A3B" height="44.0" width="44.0" />
+                                        <SVGPath content="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.5-1.5z" fill="WHITE" scaleX="0.9" scaleY="0.9" />
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="24.0" />
+                                    </VBox.margin>
+                                </StackPane>
+
+                                <Label text="Prenotazioni in Attesa" textFill="#1A1A1A">
+                                    <font>
+                                        <Font name="System Bold" size="20.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="15.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <Label prefHeight="40.0" prefWidth="260.0" text="Conferma le richieste di prenotazione inviate dai clienti" textFill="#555555" wrapText="true">
+                                    <font>
+                                        <Font size="12.5" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="8.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <Button mnemonicParsing="false" onAction="#onConfermaPrenotazioniClick" prefHeight="36.0" prefWidth="262.0" style="-fx-background-color: #B24A3B; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;" text="Conferma Prenotazioni">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="24.0" top="25.0" />
+                                    </VBox.margin>
+                                </Button>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </HBox>
+
+                <VBox fx:id="boxDescrizione" alignment="CENTER" maxWidth="645.0" prefHeight="120.0" prefWidth="645.0" style="-fx-background-color: rgba(255, 255, 255, 0.08); -fx-background-radius: 16; -fx-border-color: rgba(255, 255, 255, 0.1); -fx-border-radius: 16; -fx-border-width: 1;">
+                    <children>
+                        <Label text="Benvenuto nel nostro Spazio Giochi" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets bottom="8.0" />
+                            </VBox.margin>
+                        </Label>
+                        <Label alignment="CENTER" prefWidth="580.0" text="QuestTable Ã¨ il luogo perfetto per gli appassionati di giochi da tavolo. Prenota un tavolo per giocare con i tuoi amici nella nostra sala dedicata, oppure acquista giochi dalla nostra selezione curata per portarli a casa" textAlignment="CENTER" textFill="#EAEAEA" wrapText="true">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Button fx:id="btnStoricoPrenotazioni" managed="false" mnemonicParsing="false" onAction="#onStoricoPrenotazioniClick" style="-fx-background-color: #009688; -fx-text-fill: white; -fx-background-radius: 18; -fx-padding: 7 18 7 18; -fx-cursor: hand;" text="Storico Prenotazioni" visible="false">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="12.0" />
+                            </VBox.margin>
+                        </Button>                    </children>
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                </VBox>
+
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
+
