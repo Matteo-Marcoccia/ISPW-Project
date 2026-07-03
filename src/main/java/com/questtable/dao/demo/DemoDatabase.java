@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 final class DemoDatabase {
+    private static final String USERNAME_CLIENTE_DEMO = "matteo";
+    private static final String USERNAME_GESTORE_DEMO = "admin";
+    private static final String PASSWORD_GESTORE_DEMO = "admin";
+
     static final Map<String, Utente> utenti = new HashMap<>();
     static final Map<Integer, SessioneTavolo> sessioniTavolo = new HashMap<>();
     static final Map<Integer, Prenotazione> prenotazioni = new HashMap<>();
@@ -26,8 +30,11 @@ final class DemoDatabase {
     }
 
     private static void inizializzaUtenti() {
-        utenti.put("matteo", new Cliente("matteo", "1234", 0));
-        utenti.put("admin", new Utente("admin", "admin", RuoloUtente.GESTORE));
+        utenti.put(USERNAME_CLIENTE_DEMO, new Cliente(USERNAME_CLIENTE_DEMO, "1234", 0));
+        utenti.put(
+                USERNAME_GESTORE_DEMO,
+                new Utente(USERNAME_GESTORE_DEMO, PASSWORD_GESTORE_DEMO, RuoloUtente.GESTORE)
+        );
     }
 
     private static void inizializzaSessioniTavolo() {
@@ -42,7 +49,7 @@ final class DemoDatabase {
     }
 
     private static void inizializzaPrenotazioni() {
-        Cliente cliente = (Cliente) utenti.get("matteo");
+        Cliente cliente = (Cliente) utenti.get(USERNAME_CLIENTE_DEMO);
         SessioneTavolo tavoloCatan = sessioniTavolo.get(1);
         SessioneTavolo tavoloTicketToRide = sessioniTavolo.get(3);
 

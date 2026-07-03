@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.net.URL;
 
 public class ListaTavoliController {
+    private static final String STILE_TESTO_DETTAGLIO_CARD = "-fx-text-fill: #4A4A4A;";
+
     private final QuestTableController questTableController = new QuestTableController();
 
     private String idSessione;
@@ -137,15 +139,15 @@ public class ListaTavoliController {
 
         Label lblGiorno = new Label(tavolo.fornisciGiornoSettimana().fornisciNomeVisualizzato()
                 + " | " + tavolo.fornisciFasciaOraria());
-        lblGiorno.setStyle("-fx-text-fill: #4A4A4A;");
+        lblGiorno.setStyle(STILE_TESTO_DETTAGLIO_CARD);
 
         Label lblPosti = new Label("Posti disponibili: "
                 + tavolo.fornisciNumeroPostiDisponibili()
                 + "/" + tavolo.fornisciNumeroPostiTotali());
-        lblPosti.setStyle("-fx-text-fill: #4A4A4A;");
+        lblPosti.setStyle(STILE_TESTO_DETTAGLIO_CARD);
 
         Label lblQuota = new Label(FormattatoreImporti.formattaQuotaAPersona(tavolo.fornisciQuotaPartecipazione()));
-        lblQuota.setStyle("-fx-text-fill: #4A4A4A;");
+        lblQuota.setStyle(STILE_TESTO_DETTAGLIO_CARD);
 
         Button btnSeleziona = new Button("Seleziona");
         btnSeleziona.setMaxWidth(Double.MAX_VALUE);

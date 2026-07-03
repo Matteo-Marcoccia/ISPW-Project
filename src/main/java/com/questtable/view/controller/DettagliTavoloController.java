@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.net.URL;
 
 public class DettagliTavoloController {
+    private static final String STILE_TESTO_RIEPILOGO = "-fx-text-fill: #1A1A1A; -fx-font-weight: bold;";
+
     private final QuestTableController questTableController = new QuestTableController();
 
     private String idSessione;
@@ -146,9 +148,9 @@ public class DettagliTavoloController {
                 + "-fx-padding: 9 10 9 10; -fx-text-fill: #1A1A1A;");
         lblFasciaOrariaStatica.setStyle("-fx-background-color: #F4F4F6; -fx-background-radius: 6; "
                 + "-fx-padding: 9 10 9 10; -fx-text-fill: #1A1A1A;");
-        lblRiepilogoTavolo.setStyle("-fx-text-fill: #1A1A1A; -fx-font-weight: bold;");
-        lblRiepilogoPartecipanti.setStyle("-fx-text-fill: #1A1A1A; -fx-font-weight: bold;");
-        lblRiepilogoPrezzoUnitario.setStyle("-fx-text-fill: #1A1A1A; -fx-font-weight: bold;");
+        lblRiepilogoTavolo.setStyle(STILE_TESTO_RIEPILOGO);
+        lblRiepilogoPartecipanti.setStyle(STILE_TESTO_RIEPILOGO);
+        lblRiepilogoPrezzoUnitario.setStyle(STILE_TESTO_RIEPILOGO);
         lblRiepilogoPuntiFedelta.setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
         lblRiepilogoCostoTotale.setStyle("-fx-text-fill: #6200EE; -fx-font-weight: bold;");
     }

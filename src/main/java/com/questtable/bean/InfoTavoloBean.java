@@ -6,20 +6,18 @@ public class InfoTavoloBean {
     private final int idTavolo;
     private final String titoloGioco;
     private final String percorsoImmagine;
-    private final int postiTotali;
-    private final int postiDisponibili;
+    private final PostiTavoloBean postiTavolo;
     private final GiornoSettimana giornoSettimana;
     private final String fasciaOraria;
     private final float quota;
 
     public InfoTavoloBean(int idTavolo, String titoloGioco, String percorsoImmagine,
-                          int postiTotali, int postiDisponibili, GiornoSettimana giornoSettimana,
+                          PostiTavoloBean postiTavolo, GiornoSettimana giornoSettimana,
                           String fasciaOraria, float quota) {
         this.idTavolo = idTavolo;
         this.titoloGioco = titoloGioco;
         this.percorsoImmagine = percorsoImmagine;
-        this.postiTotali = postiTotali;
-        this.postiDisponibili = postiDisponibili;
+        this.postiTavolo = postiTavolo;
         this.giornoSettimana = giornoSettimana;
         this.fasciaOraria = fasciaOraria;
         this.quota = quota;
@@ -38,11 +36,11 @@ public class InfoTavoloBean {
     }
 
     public int fornisciNumeroPostiTotali() {
-        return postiTotali;
+        return postiTavolo.fornisciNumeroPostiTotali();
     }
 
     public int fornisciNumeroPostiDisponibili() {
-        return postiDisponibili;
+        return postiTavolo.fornisciNumeroPostiDisponibili();
     }
 
     public GiornoSettimana fornisciGiornoSettimana() {

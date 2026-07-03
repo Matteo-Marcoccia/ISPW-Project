@@ -6,28 +6,19 @@ import com.questtable.model.StatoPrenotazione;
 public class PrenotazioneBean {
     private final int idPrenotazione;
     private final String usernameCliente;
-    private final String titoloGioco;
-    private final GiornoSettimana giornoAttivita;
-    private final String fasciaOrariaAttivita;
+    private final TavoloPrenotatoBean tavoloPrenotato;
     private final String dataPrenotazione;
     private final String oraPrenotazione;
-    private final int postiPrenotati;
-    private final float importoTotale;
     private final StatoPrenotazione statoPrenotazione;
 
-    public PrenotazioneBean(int idPrenotazione, String usernameCliente, String titoloGioco,
-                            GiornoSettimana giornoAttivita, String fasciaOrariaAttivita,
+    public PrenotazioneBean(int idPrenotazione, String usernameCliente, TavoloPrenotatoBean tavoloPrenotato,
                             String dataPrenotazione, String oraPrenotazione,
-                            int postiPrenotati, float importoTotale, StatoPrenotazione statoPrenotazione) {
+                            StatoPrenotazione statoPrenotazione) {
         this.idPrenotazione = idPrenotazione;
         this.usernameCliente = usernameCliente;
-        this.titoloGioco = titoloGioco;
-        this.giornoAttivita = giornoAttivita;
-        this.fasciaOrariaAttivita = fasciaOrariaAttivita;
+        this.tavoloPrenotato = tavoloPrenotato;
         this.dataPrenotazione = dataPrenotazione;
         this.oraPrenotazione = oraPrenotazione;
-        this.postiPrenotati = postiPrenotati;
-        this.importoTotale = importoTotale;
         this.statoPrenotazione = statoPrenotazione;
     }
 
@@ -40,15 +31,15 @@ public class PrenotazioneBean {
     }
 
     public String fornisciTitoloGioco() {
-        return titoloGioco;
+        return tavoloPrenotato.fornisciTitoloGioco();
     }
 
     public GiornoSettimana fornisciGiornoAttivita() {
-        return giornoAttivita;
+        return tavoloPrenotato.fornisciGiornoAttivita();
     }
 
     public String fornisciFasciaOrariaAttivita() {
-        return fasciaOrariaAttivita;
+        return tavoloPrenotato.fornisciFasciaOrariaAttivita();
     }
 
     public String fornisciDataPrenotazione() {
@@ -60,11 +51,11 @@ public class PrenotazioneBean {
     }
 
     public int fornisciNumeroPostiPrenotati() {
-        return postiPrenotati;
+        return tavoloPrenotato.fornisciNumeroPostiPrenotati();
     }
 
     public float fornisciImportoTotale() {
-        return importoTotale;
+        return tavoloPrenotato.fornisciImportoTotale();
     }
 
     public StatoPrenotazione fornisciStatoPrenotazione() {

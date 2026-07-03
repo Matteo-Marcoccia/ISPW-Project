@@ -5,11 +5,13 @@ import com.questtable.bean.ListaPrenotazioniBean;
 import com.questtable.bean.ListaTavoliBean;
 import com.questtable.bean.LoginBean;
 import com.questtable.bean.PagamentoBean;
+import com.questtable.bean.PostiTavoloBean;
 import com.questtable.bean.PrenotazioneBean;
 import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.bean.PreventivoBean;
 import com.questtable.bean.RicercaTavoliBean;
 import com.questtable.bean.RichiestaPreventivoBean;
+import com.questtable.bean.TavoloPrenotatoBean;
 import com.questtable.dao.DAOFactory;
 import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
@@ -254,8 +256,10 @@ public class QuestTableController {
                 tavolo.fornisciIdentificativo(),
                 gioco.fornisciTitolo(),
                 gioco.fornisciPercorsoImmagine(),
-                tavolo.fornisciNumeroPostiTotali(),
-                tavolo.fornisciNumeroPostiDisponibili(),
+                new PostiTavoloBean(
+                        tavolo.fornisciNumeroPostiTotali(),
+                        tavolo.fornisciNumeroPostiDisponibili()
+                ),
                 tavolo.fornisciGiornoSettimana(),
                 tavolo.fornisciFasciaOraria(),
                 tavolo.fornisciQuotaPartecipazione()
@@ -267,13 +271,15 @@ public class QuestTableController {
         return new PrenotazioneBean(
                 prenotazione.fornisciIdentificativo(),
                 prenotazione.fornisciClienteAssociato().fornisciUsername(),
-                tavolo.fornisciGiocoAssociato().fornisciTitolo(),
-                tavolo.fornisciGiornoSettimana(),
-                tavolo.fornisciFasciaOraria(),
+                new TavoloPrenotatoBean(
+                        tavolo.fornisciGiocoAssociato().fornisciTitolo(),
+                        tavolo.fornisciGiornoSettimana(),
+                        tavolo.fornisciFasciaOraria(),
+                        prenotazione.fornisciNumeroPostiPrenotati(),
+                        prenotazione.fornisciImportoTotale()
+                ),
                 prenotazione.fornisciDataPrenotazione().format(FORMATO_DATA),
                 prenotazione.fornisciOraPrenotazione().format(FORMATO_ORA),
-                prenotazione.fornisciNumeroPostiPrenotati(),
-                prenotazione.fornisciImportoTotale(),
                 prenotazione.fornisciStatoCorrente()
         );
     }

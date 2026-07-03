@@ -1,9 +1,13 @@
 package com.questtable.model;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 
 public class Prenotazione {
+    private static final Clock OROLOGIO_PRENOTAZIONE = Clock.system(ZoneId.of("Europe/Rome"));
+
     private final int idPrenotazione;
     private final Cliente cliente;
     private final SessioneTavolo sessioneTavolo;
@@ -20,8 +24,8 @@ public class Prenotazione {
         this.sessioneTavolo = sessioneTavolo;
         this.postiPrenotati = postiPrenotati;
         this.importoTotale = importoTotale;
-        this.dataPrenotazione = LocalDate.now();
-        this.oraPrenotazione = LocalTime.now();
+        this.dataPrenotazione = LocalDate.now(OROLOGIO_PRENOTAZIONE);
+        this.oraPrenotazione = LocalTime.now(OROLOGIO_PRENOTAZIONE);
         this.stato = StatoPrenotazione.IN_ATTESA;
     }
 
