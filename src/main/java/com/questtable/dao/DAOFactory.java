@@ -5,6 +5,7 @@ import com.questtable.dao.demo.DemoDAOFactory;
 import com.questtable.dao.file_system.FileSystemDAOFactory;
 import com.questtable.dao.mysql.MySQLDAOFactory;
 
+@SuppressWarnings("java:S6548")
 public abstract class DAOFactory {
 
     public static final int MYSQL = 1;

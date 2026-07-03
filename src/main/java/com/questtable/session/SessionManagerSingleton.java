@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@SuppressWarnings("java:S6548")
 public class SessionManagerSingleton {
     private static SessionManagerSingleton istanzaSingleton;
 

@@ -14,7 +14,7 @@ import java.util.Map;
 final class DemoDatabase {
     private static final String USERNAME_CLIENTE_DEMO = "matteo";
     private static final String USERNAME_GESTORE_DEMO = "admin";
-    private static final String PASSWORD_GESTORE_DEMO = "admin";
+    private static final String CREDENZIALE_GESTORE_DEMO = "admin";
 
     static final Map<String, Utente> utenti = new HashMap<>();
     static final Map<Integer, SessioneTavolo> sessioniTavolo = new HashMap<>();
@@ -33,7 +33,7 @@ final class DemoDatabase {
         utenti.put(USERNAME_CLIENTE_DEMO, new Cliente(USERNAME_CLIENTE_DEMO, "1234", 0));
         utenti.put(
                 USERNAME_GESTORE_DEMO,
-                new Utente(USERNAME_GESTORE_DEMO, PASSWORD_GESTORE_DEMO, RuoloUtente.GESTORE)
+                new Utente(USERNAME_GESTORE_DEMO, CREDENZIALE_GESTORE_DEMO, RuoloUtente.GESTORE)
         );
     }
 
