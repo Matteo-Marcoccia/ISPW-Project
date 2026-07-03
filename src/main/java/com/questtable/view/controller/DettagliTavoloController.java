@@ -80,7 +80,7 @@ public class DettagliTavoloController {
     }
 
     @FXML
-    void onAumentaPartecipantiClick(ActionEvent event) {
+    void onAumentaPartecipantiClick() {
         if (tavoloSelezionato == null
                 || numeroPartecipanti >= tavoloSelezionato.fornisciNumeroPostiDisponibili()) {
             return;
@@ -91,7 +91,7 @@ public class DettagliTavoloController {
     }
 
     @FXML
-    void onDiminuisciPartecipantiClick(ActionEvent event) {
+    void onDiminuisciPartecipantiClick() {
         if (numeroPartecipanti <= 1) {
             return;
         }

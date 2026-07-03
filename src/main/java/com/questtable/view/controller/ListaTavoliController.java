@@ -64,7 +64,7 @@ public class ListaTavoliController {
     }
 
     @FXML
-    void onRichiediTavoloClick(ActionEvent event) {
+    void onRichiediTavoloClick() {
         MessaggiGrafici.mostraInformazione(
                 "Funzione non disponibile",
                 "Richiesta tavolo non disponibile",
@@ -73,7 +73,7 @@ public class ListaTavoliController {
     }
 
     @FXML
-    void onCercaTavoliClick(ActionEvent event) {
+    void onCercaTavoliClick() {
         RicercaTavoliBean ricercaTavoliBean = new RicercaTavoliBean(
                 txtFiltroGioco.getText(),
                 cmbFiltroGiorno.getValue()
@@ -82,7 +82,7 @@ public class ListaTavoliController {
     }
 
     @FXML
-    void onPulisciFiltriClick(ActionEvent event) {
+    void onPulisciFiltriClick() {
         txtFiltroGioco.clear();
         cmbFiltroGiorno.getSelectionModel().clearSelection();
         caricaTavoliDisponibili();

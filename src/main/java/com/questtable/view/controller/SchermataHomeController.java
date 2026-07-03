@@ -97,7 +97,7 @@ public class SchermataHomeController {
     }
 
     @FXML
-    void onVaiAlloShopClick(ActionEvent event) {
+    void onVaiAlloShopClick() {
         MessaggiGrafici.mostraInformazione(
                 "Funzione non disponibile",
                 "Acquisto giochi non disponibile",
@@ -106,7 +106,7 @@ public class SchermataHomeController {
     }
 
     @FXML
-    void onProfiloUtenteClick(ActionEvent event) {
+    void onProfiloUtenteClick() {
         boolean logoutConfermato = MessaggiGrafici.richiediConferma(
                 "Disconnessione",
                 "Vuoi disconnetterti?",

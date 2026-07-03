@@ -36,7 +36,7 @@ public class LoginController {
     }
 
     @FXML
-    void onLoginSubmit(ActionEvent event) throws IOException {
+    void onLoginSubmit() throws IOException {
         LoginBean loginBean = new LoginBean(txtUsername.getText(), txtPassword.getText());
 
         try {
