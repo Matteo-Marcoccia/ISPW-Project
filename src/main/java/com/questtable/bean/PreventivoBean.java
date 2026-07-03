@@ -51,14 +51,4 @@ public class PreventivoBean {
         return puntiFedeltaPrevisti;
     }
 
-    public boolean verificaPreventivoValido() {
-        return idTavolo > 0
-                && titoloGioco != null
-                && !titoloGioco.trim().isEmpty()
-                && giornoSettimana != null
-                && fasciaOraria != null
-                && !fasciaOraria.trim().isEmpty()
-                && postiRichiesti > 0
-                && importoTotale > 0;
-    }
 }

@@ -6,6 +6,13 @@ import javafx.scene.control.ButtonType;
 import java.util.Optional;
 
 final class MessaggiGrafici {
+    private static final String TITOLO_FUNZIONE_NON_DISPONIBILE = "Funzione non disponibile";
+    private static final String TESTO_FUNZIONE_NON_DISPONIBILE =
+            "Questa funzione non e' prevista nella versione corrente di QuestTable.";
+    private static final String TITOLO_DISCONNESSIONE = "Disconnessione";
+    private static final String INTESTAZIONE_DISCONNESSIONE = "Vuoi disconnetterti?";
+    private static final String TESTO_DISCONNESSIONE = "Conferma per uscire dal tuo account.";
+
     private MessaggiGrafici() {
     }
 
@@ -17,19 +24,19 @@ final class MessaggiGrafici {
         alert.showAndWait();
     }
 
-    static void mostraInformazione(String titolo, String intestazione, String contenuto) {
+    static void mostraFunzioneNonDisponibile(String intestazione) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titolo);
+        alert.setTitle(TITOLO_FUNZIONE_NON_DISPONIBILE);
         alert.setHeaderText(intestazione);
-        alert.setContentText(contenuto);
+        alert.setContentText(TESTO_FUNZIONE_NON_DISPONIBILE);
         alert.showAndWait();
     }
 
-    static boolean richiediConferma(String titolo, String intestazione, String contenuto) {
+    static boolean richiediConfermaLogout() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(titolo);
-        alert.setHeaderText(intestazione);
-        alert.setContentText(contenuto);
+        alert.setTitle(TITOLO_DISCONNESSIONE);
+        alert.setHeaderText(INTESTAZIONE_DISCONNESSIONE);
+        alert.setContentText(TESTO_DISCONNESSIONE);
 
         Optional<ButtonType> scelta = alert.showAndWait();
         return scelta.isPresent() && scelta.get() == ButtonType.OK;

@@ -48,12 +48,12 @@ public class SessioneTavolo {
         return quota;
     }
 
-    public boolean verificaDisponibilitaPer(int postiRichiesti) {
-        return postiRichiesti > 0 && postiRichiesti <= postiDisponibili;
+    public boolean verificaPostiNonPrenotabili(int postiRichiesti) {
+        return postiRichiesti <= 0 || postiRichiesti > postiDisponibili;
     }
 
     public boolean prenotaPosti(int postiRichiesti) {
-        if (!verificaDisponibilitaPer(postiRichiesti)) {
+        if (verificaPostiNonPrenotabili(postiRichiesti)) {
             return false;
         }
 

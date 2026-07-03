@@ -30,10 +30,6 @@ public class PagamentoBean {
         return importo;
     }
 
-    public MetodoPagamento fornisciMetodoPagamento() {
-        return metodoPagamento;
-    }
-
     public boolean verificaPagamentoEffettuato() {
         return pagamentoEffettuato;
     }

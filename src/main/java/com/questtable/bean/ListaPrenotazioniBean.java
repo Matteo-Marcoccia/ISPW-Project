@@ -15,7 +15,7 @@ public class ListaPrenotazioniBean {
         return Collections.unmodifiableList(prenotazioni);
     }
 
-    public boolean verificaPresenzaPrenotazioni() {
-        return !prenotazioni.isEmpty();
+    public boolean verificaAssenzaPrenotazioni() {
+        return prenotazioni.isEmpty();
     }
 }

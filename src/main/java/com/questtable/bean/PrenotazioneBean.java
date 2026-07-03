@@ -7,7 +7,6 @@ public class PrenotazioneBean {
     private final int idPrenotazione;
     private final String usernameCliente;
     private final String titoloGioco;
-    private final int idTavolo;
     private final GiornoSettimana giornoAttivita;
     private final String fasciaOrariaAttivita;
     private final String dataPrenotazione;
@@ -17,13 +16,12 @@ public class PrenotazioneBean {
     private final StatoPrenotazione statoPrenotazione;
 
     public PrenotazioneBean(int idPrenotazione, String usernameCliente, String titoloGioco,
-                            int idTavolo, GiornoSettimana giornoAttivita, String fasciaOrariaAttivita,
+                            GiornoSettimana giornoAttivita, String fasciaOrariaAttivita,
                             String dataPrenotazione, String oraPrenotazione,
                             int postiPrenotati, float importoTotale, StatoPrenotazione statoPrenotazione) {
         this.idPrenotazione = idPrenotazione;
         this.usernameCliente = usernameCliente;
         this.titoloGioco = titoloGioco;
-        this.idTavolo = idTavolo;
         this.giornoAttivita = giornoAttivita;
         this.fasciaOrariaAttivita = fasciaOrariaAttivita;
         this.dataPrenotazione = dataPrenotazione;
@@ -43,10 +41,6 @@ public class PrenotazioneBean {
 
     public String fornisciTitoloGioco() {
         return titoloGioco;
-    }
-
-    public int fornisciIdentificativoTavolo() {
-        return idTavolo;
     }
 
     public GiornoSettimana fornisciGiornoAttivita() {

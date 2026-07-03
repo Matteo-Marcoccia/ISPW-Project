@@ -57,7 +57,4 @@ public class InfoTavoloBean {
         return quota;
     }
 
-    public boolean verificaDisponibilita() {
-        return postiDisponibili > 0;
-    }
 }

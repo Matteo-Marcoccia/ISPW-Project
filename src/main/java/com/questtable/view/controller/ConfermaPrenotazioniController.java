@@ -50,7 +50,7 @@ public class ConfermaPrenotazioniController {
             ListaPrenotazioniBean listaPrenotazioniBean =
                     questTableController.fornisciPrenotazioniInAttesa(idSessione);
 
-            if (!listaPrenotazioniBean.verificaPresenzaPrenotazioni()) {
+            if (listaPrenotazioniBean.verificaAssenzaPrenotazioni()) {
                 containerPrenotazioni.getChildren().add(creaMessaggioListaVuota());
                 return;
             }

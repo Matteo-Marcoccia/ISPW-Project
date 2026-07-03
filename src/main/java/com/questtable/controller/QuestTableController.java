@@ -62,10 +62,6 @@ public class QuestTableController {
         return sessionManager.apriSessione(utente);
     }
 
-    public RuoloUtente fornisciRuoloSessione(String idSessione) {
-        return fornisciSessione(idSessione).fornisciRuolo();
-    }
-
     public ProfiloUtenteBean fornisciProfiloUtente(String idSessione) {
         Session sessione = fornisciSessione(idSessione);
         Utente utente = utenteDAO.recuperaUtente(sessione.fornisciUsername());
@@ -126,7 +122,7 @@ public class QuestTableController {
             throw new IllegalArgumentException("Tavolo non trovato.");
         }
 
-        if (!tavolo.verificaDisponibilitaPer(richiestaPreventivoBean.fornisciNumeroPostiRichiesti())) {
+        if (tavolo.verificaPostiNonPrenotabili(richiestaPreventivoBean.fornisciNumeroPostiRichiesti())) {
             throw new IllegalArgumentException("Posti non disponibili per il tavolo selezionato.");
         }
 
@@ -272,7 +268,6 @@ public class QuestTableController {
                 prenotazione.fornisciIdentificativo(),
                 prenotazione.fornisciClienteAssociato().fornisciUsername(),
                 tavolo.fornisciGiocoAssociato().fornisciTitolo(),
-                tavolo.fornisciIdentificativo(),
                 tavolo.fornisciGiornoSettimana(),
                 tavolo.fornisciFasciaOraria(),
                 prenotazione.fornisciDataPrenotazione().format(FORMATO_DATA),

@@ -21,10 +21,6 @@ public class Session {
         return username;
     }
 
-    public RuoloUtente fornisciRuolo() {
-        return ruolo;
-    }
-
     public boolean verificaRuolo(RuoloUtente ruoloRichiesto) {
         return ruolo == ruoloRichiesto;
     }

@@ -47,7 +47,7 @@ public class StoricoPrenotazioniController {
             ListaPrenotazioniBean listaPrenotazioniBean =
                     questTableController.fornisciPrenotazioniCliente(idSessione);
 
-            if (!listaPrenotazioniBean.verificaPresenzaPrenotazioni()) {
+            if (listaPrenotazioniBean.verificaAssenzaPrenotazioni()) {
                 containerPrenotazioni.getChildren().add(creaMessaggioListaVuota());
                 return;
             }

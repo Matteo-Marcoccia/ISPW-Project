@@ -9,15 +9,17 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class QuestTableApp extends Application {
+    private static final String PERCORSO_HOME = "/com/questtable/view/SchermataHomeView.fxml";
+    private static final String TITOLO_APPLICAZIONE = "QuestTable";
+    private static final int LARGHEZZA_FINESTRA = 1050;
+    private static final int ALTEZZA_FINESTRA = 720;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Load the FXML file for the main view
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/questtable/view/SchermataHomeView.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(PERCORSO_HOME)));
 
-        // Set up the primary stage
-        primaryStage.setTitle("QuestTable Application");
-        primaryStage.setScene(new Scene(root, 1050, 720));
+        primaryStage.setTitle(TITOLO_APPLICAZIONE);
+        primaryStage.setScene(new Scene(root, LARGHEZZA_FINESTRA, ALTEZZA_FINESTRA));
         primaryStage.show();
     }
 

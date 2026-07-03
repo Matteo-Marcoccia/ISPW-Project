@@ -98,20 +98,12 @@ public class SchermataHomeController {
 
     @FXML
     void onVaiAlloShopClick() {
-        MessaggiGrafici.mostraInformazione(
-                "Funzione non disponibile",
-                "Acquisto giochi non disponibile",
-                "Questa funzione non e' prevista nella versione corrente di QuestTable."
-        );
+        MessaggiGrafici.mostraFunzioneNonDisponibile("Acquisto giochi non disponibile");
     }
 
     @FXML
     void onProfiloUtenteClick() {
-        boolean logoutConfermato = MessaggiGrafici.richiediConferma(
-                "Disconnessione",
-                "Vuoi disconnetterti?",
-                "Conferma per uscire dal tuo account."
-        );
+        boolean logoutConfermato = MessaggiGrafici.richiediConfermaLogout();
         if (!logoutConfermato) {
             return;
         }

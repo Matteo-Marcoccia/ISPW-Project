@@ -50,7 +50,7 @@ public class LoginController {
 
     @FXML
     void onTornaHomeClick(ActionEvent event) throws IOException {
-        cambiaSchermata(event, "/com/questtable/view/SchermataHomeView.fxml");
+        tornaAllaHome(event);
     }
 
     private void apriSchermataSuccessiva(String idSessione, ProfiloUtenteBean profiloUtente) throws IOException {
@@ -83,8 +83,8 @@ public class LoginController {
         aggiornaScena(root);
     }
 
-    private void cambiaSchermata(ActionEvent event, String percorsoFXML) throws IOException {
-        FXMLLoader loader = NavigazioneGrafica.creaLoader(getClass(), percorsoFXML);
+    private void tornaAllaHome(ActionEvent event) throws IOException {
+        FXMLLoader loader = NavigazioneGrafica.creaLoader(getClass(), "/com/questtable/view/SchermataHomeView.fxml");
         Parent root = loader.load();
         NavigazioneGrafica.aggiornaScena(event, root);
     }

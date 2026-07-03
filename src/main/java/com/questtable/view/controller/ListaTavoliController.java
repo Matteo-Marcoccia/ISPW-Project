@@ -65,11 +65,7 @@ public class ListaTavoliController {
 
     @FXML
     void onRichiediTavoloClick() {
-        MessaggiGrafici.mostraInformazione(
-                "Funzione non disponibile",
-                "Richiesta tavolo non disponibile",
-                "Questa funzione non e' prevista nella versione corrente di QuestTable."
-        );
+        MessaggiGrafici.mostraFunzioneNonDisponibile("Richiesta tavolo non disponibile");
     }
 
     @FXML

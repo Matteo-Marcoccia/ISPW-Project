@@ -27,7 +27,4 @@ public class RicercaTavoliBean {
         return giornoSettimana != null;
     }
 
-    public boolean verificaAlmenoUnFiltroPresente() {
-        return verificaFiltroGiocoPresente() || verificaFiltroGiornoPresente();
-    }
 }

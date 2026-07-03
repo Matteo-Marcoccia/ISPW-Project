@@ -17,10 +17,6 @@ public class ProfiloUtenteBean {
         return username;
     }
 
-    public RuoloUtente fornisciRuolo() {
-        return ruolo;
-    }
-
     public int fornisciPuntiFedelta() {
         return puntiFedelta;
     }
