@@ -1,4 +1,4 @@
-package com.questtable.view.controller;
+package com.questtable.view.javafx.controller;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;

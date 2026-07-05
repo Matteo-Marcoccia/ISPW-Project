@@ -33,12 +33,24 @@ public class Prenotazione {
         return idPrenotazione;
     }
 
-    public Cliente fornisciClienteAssociato() {
-        return cliente;
+    public String fornisciUsernameCliente() {
+        return cliente.fornisciUsername();
     }
 
-    public SessioneTavolo fornisciSessioneTavoloAssociata() {
-        return sessioneTavolo;
+    public int fornisciPuntiFedeltaCliente() {
+        return cliente.fornisciPuntiFedelta();
+    }
+
+    public String fornisciTitoloGiocoPrenotato() {
+        return sessioneTavolo.fornisciTitoloGiocoAssociato();
+    }
+
+    public GiornoSettimana fornisciGiornoAttivitaPrenotata() {
+        return sessioneTavolo.fornisciGiornoSettimana();
+    }
+
+    public String fornisciFasciaOrariaAttivitaPrenotata() {
+        return sessioneTavolo.fornisciFasciaOraria();
     }
 
     public LocalDate fornisciDataPrenotazione() {
@@ -63,6 +75,10 @@ public class Prenotazione {
 
     public void confermaPrenotazione() {
         stato = StatoPrenotazione.CONFERMATA;
+    }
+
+    public void accreditaPuntiFedeltaAlCliente() {
+        cliente.accreditaPuntiFedelta(calcolaPuntiFedeltaDaAccreditare());
     }
 
     public int calcolaPuntiFedeltaDaAccreditare() {

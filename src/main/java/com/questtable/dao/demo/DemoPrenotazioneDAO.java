@@ -23,7 +23,7 @@ public class DemoPrenotazioneDAO implements IPrenotazioneDAO {
         List<Prenotazione> prenotazioniCliente = new ArrayList<>();
 
         for (Prenotazione prenotazione : DemoDatabase.prenotazioni.values()) {
-            if (prenotazione.fornisciClienteAssociato().fornisciUsername().equals(usernameCliente)) {
+            if (prenotazione.fornisciUsernameCliente().equals(usernameCliente)) {
                 prenotazioniCliente.add(prenotazione);
             }
         }

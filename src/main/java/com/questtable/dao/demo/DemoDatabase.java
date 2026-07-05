@@ -53,7 +53,25 @@ final class DemoDatabase {
         SessioneTavolo tavoloCatan = sessioniTavolo.get(1);
         SessioneTavolo tavoloTicketToRide = sessioniTavolo.get(3);
 
-        prenotazioni.put(1, new Prenotazione(1, cliente, tavoloCatan, 1, 12.00f));
-        prenotazioni.put(2, new Prenotazione(2, cliente, tavoloTicketToRide, 1, 10.00f));
+        registraPrenotazioneDemo(1, cliente, tavoloCatan, 1);
+        registraPrenotazioneDemo(2, cliente, tavoloTicketToRide, 2);
+    }
+
+    private static void registraPrenotazioneDemo(int idPrenotazione, Cliente cliente,
+                                                 SessioneTavolo tavolo, int postiPrenotati) {
+        if (!tavolo.prenotaPosti(postiPrenotati)) {
+            return;
+        }
+
+        prenotazioni.put(
+                idPrenotazione,
+                new Prenotazione(
+                        idPrenotazione,
+                        cliente,
+                        tavolo,
+                        postiPrenotati,
+                        tavolo.calcolaImportoPer(postiPrenotati)
+                )
+        );
     }
 }

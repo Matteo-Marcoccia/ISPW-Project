@@ -1,4 +1,4 @@
-package com.questtable.view.controller;
+package com.questtable.view.javafx.controller;
 
 import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.controller.QuestTableController;

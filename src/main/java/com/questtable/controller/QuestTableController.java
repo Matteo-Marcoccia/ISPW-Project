@@ -17,7 +17,6 @@ import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
 import com.questtable.model.Cliente;
-import com.questtable.model.Gioco;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.model.Prenotazione;
 import com.questtable.model.RuoloUtente;
@@ -128,16 +127,16 @@ public class QuestTableController {
             throw new IllegalArgumentException("Posti non disponibili per il tavolo selezionato.");
         }
 
-        float importoTotale = tavolo.fornisciQuotaPartecipazione()
-                * richiestaPreventivoBean.fornisciNumeroPostiRichiesti();
-        int puntiFedeltaPrevisti = Math.round(importoTotale * 10);
+        int postiRichiesti = richiestaPreventivoBean.fornisciNumeroPostiRichiesti();
+        float importoTotale = tavolo.calcolaImportoPer(postiRichiesti);
+        int puntiFedeltaPrevisti = tavolo.calcolaPuntiFedeltaPer(postiRichiesti);
 
         return new PreventivoBean(
                 tavolo.fornisciIdentificativo(),
-                tavolo.fornisciGiocoAssociato().fornisciTitolo(),
+                tavolo.fornisciTitoloGiocoAssociato(),
                 tavolo.fornisciGiornoSettimana(),
                 tavolo.fornisciFasciaOraria(),
-                richiestaPreventivoBean.fornisciNumeroPostiRichiesti(),
+                postiRichiesti,
                 importoTotale,
                 puntiFedeltaPrevisti
         );
@@ -214,9 +213,11 @@ public class QuestTableController {
         }
 
         prenotazioneDAO.confermaPrenotazione(idPrenotazione);
-        Cliente cliente = prenotazione.fornisciClienteAssociato();
-        cliente.accreditaPuntiFedelta(prenotazione.calcolaPuntiFedeltaDaAccreditare());
-        utenteDAO.aggiornaPuntiFedelta(cliente.fornisciUsername(), cliente.fornisciPuntiFedelta());
+        prenotazione.accreditaPuntiFedeltaAlCliente();
+        utenteDAO.aggiornaPuntiFedelta(
+                prenotazione.fornisciUsernameCliente(),
+                prenotazione.fornisciPuntiFedeltaCliente()
+        );
     }
 
     public void effettuaLogout(String idSessione) {
@@ -251,11 +252,10 @@ public class QuestTableController {
     }
 
     private InfoTavoloBean creaInfoTavoloBean(SessioneTavolo tavolo) {
-        Gioco gioco = tavolo.fornisciGiocoAssociato();
         return new InfoTavoloBean(
                 tavolo.fornisciIdentificativo(),
-                gioco.fornisciTitolo(),
-                gioco.fornisciPercorsoImmagine(),
+                tavolo.fornisciTitoloGiocoAssociato(),
+                tavolo.fornisciPercorsoImmagineGiocoAssociato(),
                 new PostiTavoloBean(
                         tavolo.fornisciNumeroPostiTotali(),
                         tavolo.fornisciNumeroPostiDisponibili()
@@ -267,14 +267,13 @@ public class QuestTableController {
     }
 
     private PrenotazioneBean creaPrenotazioneBean(Prenotazione prenotazione) {
-        SessioneTavolo tavolo = prenotazione.fornisciSessioneTavoloAssociata();
         return new PrenotazioneBean(
                 prenotazione.fornisciIdentificativo(),
-                prenotazione.fornisciClienteAssociato().fornisciUsername(),
+                prenotazione.fornisciUsernameCliente(),
                 new TavoloPrenotatoBean(
-                        tavolo.fornisciGiocoAssociato().fornisciTitolo(),
-                        tavolo.fornisciGiornoSettimana(),
-                        tavolo.fornisciFasciaOraria(),
+                        prenotazione.fornisciTitoloGiocoPrenotato(),
+                        prenotazione.fornisciGiornoAttivitaPrenotata(),
+                        prenotazione.fornisciFasciaOrariaAttivitaPrenotata(),
                         prenotazione.fornisciNumeroPostiPrenotati(),
                         prenotazione.fornisciImportoTotale()
                 ),

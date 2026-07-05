@@ -24,8 +24,12 @@ public class SessioneTavolo {
         return idTavolo;
     }
 
-    public Gioco fornisciGiocoAssociato() {
-        return gioco;
+    public String fornisciTitoloGiocoAssociato() {
+        return gioco.fornisciTitolo();
+    }
+
+    public String fornisciPercorsoImmagineGiocoAssociato() {
+        return gioco.fornisciPercorsoImmagine();
     }
 
     public int fornisciNumeroPostiTotali() {
@@ -46,6 +50,14 @@ public class SessioneTavolo {
 
     public float fornisciQuotaPartecipazione() {
         return quota;
+    }
+
+    public float calcolaImportoPer(int postiRichiesti) {
+        return quota * postiRichiesti;
+    }
+
+    public int calcolaPuntiFedeltaPer(int postiRichiesti) {
+        return Math.round(calcolaImportoPer(postiRichiesti) * 10);
     }
 
     public boolean verificaPostiNonPrenotabili(int postiRichiesti) {

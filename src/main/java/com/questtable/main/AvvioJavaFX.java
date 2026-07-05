@@ -1,4 +1,4 @@
-package com.questtable;
+package com.questtable.main;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class QuestTableApp extends Application {
+public class AvvioJavaFX extends Application {
     private static final String PERCORSO_HOME = "/com/questtable/view/SchermataHomeView.fxml";
     private static final String TITOLO_APPLICAZIONE = "QuestTable";
     private static final int LARGHEZZA_FINESTRA = 1050;
@@ -23,9 +23,9 @@ public class QuestTableApp extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
+    static void avvia() {
         System.setProperty("prism.lcdtext", "false");
         System.setProperty("prism.text", "t2k");
-        launch(args);
+        launch();
     }
 }

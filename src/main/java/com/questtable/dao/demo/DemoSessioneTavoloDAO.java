@@ -36,8 +36,7 @@ public class DemoSessioneTavoloDAO implements ISessioneTavoloDAO {
 
     private boolean verificaTitoloCompatibile(SessioneTavolo sessioneTavolo, String titoloGioco) {
         return titoloGioco == null
-                || sessioneTavolo.fornisciGiocoAssociato()
-                .fornisciTitolo()
+                || sessioneTavolo.fornisciTitoloGiocoAssociato()
                 .toLowerCase()
                 .contains(titoloGioco.trim().toLowerCase());
     }
