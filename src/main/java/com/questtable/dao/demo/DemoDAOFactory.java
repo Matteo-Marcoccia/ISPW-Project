@@ -6,19 +6,22 @@ import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
 
 public class DemoDAOFactory extends DAOFactory {
+    private final DemoUtenteDAO utenteDAO = new DemoUtenteDAO();
+    private final DemoSessioneTavoloDAO sessioneTavoloDAO = new DemoSessioneTavoloDAO();
+    private final DemoPrenotazioneDAO prenotazioneDAO = new DemoPrenotazioneDAO();
 
     @Override
     public IUtenteDAO fornisciUtenteDAO() {
-        return new DemoUtenteDAO();
+        return utenteDAO;
     }
 
     @Override
     public ISessioneTavoloDAO fornisciSessioneTavoloDAO() {
-        return new DemoSessioneTavoloDAO();
+        return sessioneTavoloDAO;
     }
 
     @Override
     public IPrenotazioneDAO fornisciPrenotazioneDAO() {
-        return new DemoPrenotazioneDAO();
+        return prenotazioneDAO;
     }
 }

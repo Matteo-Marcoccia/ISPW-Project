@@ -19,14 +19,29 @@ public class Prenotazione {
 
     public Prenotazione(int idPrenotazione, Cliente cliente, SessioneTavolo sessioneTavolo,
                         int postiPrenotati, float importoTotale) {
+        this(
+                idPrenotazione,
+                cliente,
+                sessioneTavolo,
+                LocalDate.now(OROLOGIO_PRENOTAZIONE),
+                LocalTime.now(OROLOGIO_PRENOTAZIONE),
+                postiPrenotati,
+                importoTotale,
+                StatoPrenotazione.IN_ATTESA
+        );
+    }
+
+    public Prenotazione(int idPrenotazione, Cliente cliente, SessioneTavolo sessioneTavolo,
+                        LocalDate dataPrenotazione, LocalTime oraPrenotazione,
+                        int postiPrenotati, float importoTotale, StatoPrenotazione stato) {
         this.idPrenotazione = idPrenotazione;
         this.cliente = cliente;
         this.sessioneTavolo = sessioneTavolo;
+        this.dataPrenotazione = dataPrenotazione;
+        this.oraPrenotazione = oraPrenotazione;
         this.postiPrenotati = postiPrenotati;
         this.importoTotale = importoTotale;
-        this.dataPrenotazione = LocalDate.now(OROLOGIO_PRENOTAZIONE);
-        this.oraPrenotazione = LocalTime.now(OROLOGIO_PRENOTAZIONE);
-        this.stato = StatoPrenotazione.IN_ATTESA;
+        this.stato = stato;
     }
 
     public int fornisciIdentificativo() {
@@ -43,6 +58,10 @@ public class Prenotazione {
 
     public String fornisciTitoloGiocoPrenotato() {
         return sessioneTavolo.fornisciTitoloGiocoAssociato();
+    }
+
+    public int fornisciIdentificativoTavoloPrenotato() {
+        return sessioneTavolo.fornisciIdentificativo();
     }
 
     public GiornoSettimana fornisciGiornoAttivitaPrenotata() {

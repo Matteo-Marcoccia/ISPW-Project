@@ -6,19 +6,23 @@ import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
 
 public class FileSystemDAOFactory extends DAOFactory {
+    private final FileSystemUtenteDAO utenteDAO = new FileSystemUtenteDAO();
+    private final FileSystemSessioneTavoloDAO sessioneTavoloDAO = new FileSystemSessioneTavoloDAO();
+    private final FileSystemPrenotazioneDAO prenotazioneDAO =
+            new FileSystemPrenotazioneDAO(utenteDAO, sessioneTavoloDAO);
 
     @Override
     public IUtenteDAO fornisciUtenteDAO() {
-        throw new UnsupportedOperationException("Persistenza file system non ancora implementata.");
+        return utenteDAO;
     }
 
     @Override
     public ISessioneTavoloDAO fornisciSessioneTavoloDAO() {
-        throw new UnsupportedOperationException("Persistenza file system non ancora implementata.");
+        return sessioneTavoloDAO;
     }
 
     @Override
     public IPrenotazioneDAO fornisciPrenotazioneDAO() {
-        throw new UnsupportedOperationException("Persistenza file system non ancora implementata.");
+        return prenotazioneDAO;
     }
 }

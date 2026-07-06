@@ -25,7 +25,7 @@
          <children>
             
 
-            <Button fx:id="btnAccedi" mnemonicParsing="false" onAction="#onAccediClick" style="-fx-background-color: rgba(255, 255, 255, 0.15); -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.3); -fx-border-radius: 20; -fx-border-width: 1; -fx-padding: 6 16 6 16; -fx-cursor: hand;" text="â†’ Accedi">
+            <Button fx:id="btnAccedi" mnemonicParsing="false" onAction="#onAccediClick" style="-fx-background-color: rgba(255, 255, 255, 0.20); -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.42); -fx-border-radius: 20; -fx-border-width: 1; -fx-padding: 7 18 7 18; -fx-cursor: hand;" text="Accedi">
                <font>
                   <Font name="Segoe UI Bold" size="13.0" />
                </font>
@@ -194,7 +194,7 @@
                                 <Insets bottom="8.0" />
                             </VBox.margin>
                         </Label>
-                        <Label alignment="CENTER" prefWidth="580.0" text="QuestTable Ã¨ il luogo perfetto per gli appassionati di giochi da tavolo. Prenota un tavolo per giocare con i tuoi amici nella nostra sala dedicata, oppure acquista giochi dalla nostra selezione curata per portarli a casa" textAlignment="CENTER" textFill="#EAEAEA" wrapText="true">
+                        <Label alignment="CENTER" prefWidth="580.0" text="QuestTable e' il luogo perfetto per gli appassionati di giochi da tavolo. Prenota un tavolo per giocare con i tuoi amici nella nostra sala dedicata, oppure acquista giochi dalla nostra selezione curata per portarli a casa" textAlignment="CENTER" textFill="#EAEAEA" wrapText="true">
                             <font>
                                 <Font size="12.0" />
                             </font>
@@ -216,4 +216,5 @@
         </VBox>
     </children>
 </AnchorPane>
+
 

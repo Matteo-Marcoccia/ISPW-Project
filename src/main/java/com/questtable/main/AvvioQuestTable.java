@@ -37,7 +37,8 @@ public class AvvioQuestTable {
                     sceltaValida = true;
                 }
                 case SCELTA_FILE_SYSTEM -> {
-                    mostraPersistenzaNonDisponibile();
+                    PersistenceConfig.configuraTipoPersistenza(DAOFactory.FILE_SYSTEM);
+                    sceltaValida = true;
                 }
                 case SCELTA_MYSQL -> {
                     mostraPersistenzaNonDisponibile();
@@ -72,7 +73,7 @@ public class AvvioQuestTable {
         stampaSeparatore();
         System.out.println("Seleziona il livello di persistenza");
         System.out.println("1. Demo");
-        System.out.println("2. File system (non ancora disponibile)");
+        System.out.println("2. File system");
         System.out.println("3. MySQL (non ancora disponibile)");
     }
 

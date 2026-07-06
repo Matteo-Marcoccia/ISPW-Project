@@ -64,7 +64,7 @@ public class SchermataHomeController {
 
         if (profiloUtente.verificaRuolo(RuoloUtente.CLIENTE)) {
             btnProfiloUtente.setText(profiloUtente.fornisciUsername()
-                    + "  |  * " + profiloUtente.fornisciPuntiFedelta() + " punti");
+                    + "  |  \u2B50 " + profiloUtente.fornisciPuntiFedelta() + " punti");
             boxDescrizione.setStyle("-fx-background-color: rgba(0, 150, 136, 0.22); -fx-background-radius: 16; "
                     + "-fx-border-color: rgba(178, 255, 244, 0.45); -fx-border-radius: 16; -fx-border-width: 1;");
             btnStoricoPrenotazioni.setVisible(true);
