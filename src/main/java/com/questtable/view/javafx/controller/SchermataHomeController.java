@@ -6,8 +6,11 @@ import com.questtable.model.RuoloUtente;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -63,8 +66,8 @@ public class SchermataHomeController {
         btnProfiloUtente.setManaged(true);
 
         if (profiloUtente.verificaRuolo(RuoloUtente.CLIENTE)) {
-            btnProfiloUtente.setText(profiloUtente.fornisciUsername()
-                    + "  |  \u2B50 " + profiloUtente.fornisciPuntiFedelta() + " punti");
+            btnProfiloUtente.setText("");
+            btnProfiloUtente.setGraphic(creaContenutoProfiloCliente(profiloUtente));
             boxDescrizione.setStyle("-fx-background-color: rgba(0, 150, 136, 0.22); -fx-background-radius: 16; "
                     + "-fx-border-color: rgba(178, 255, 244, 0.45); -fx-border-radius: 16; -fx-border-width: 1;");
             btnStoricoPrenotazioni.setVisible(true);
@@ -72,6 +75,7 @@ public class SchermataHomeController {
             return;
         }
 
+        btnProfiloUtente.setGraphic(null);
         btnProfiloUtente.setText(profiloUtente.fornisciUsername() + "  |  Gestore");
         boxPrenota.setVisible(false);
         boxPrenota.setManaged(false);
@@ -115,6 +119,7 @@ public class SchermataHomeController {
         btnAccedi.setManaged(true);
         btnProfiloUtente.setVisible(false);
         btnProfiloUtente.setManaged(false);
+        btnProfiloUtente.setGraphic(null);
 
         boxPrenota.setVisible(true);
         boxPrenota.setManaged(true);
@@ -171,5 +176,22 @@ public class SchermataHomeController {
         listaTavoliController.inizializzaSessione(idSessione);
 
         NavigazioneGrafica.aggiornaScena(event, root);
+    }
+
+    private HBox creaContenutoProfiloCliente(ProfiloUtenteBean profiloUtente) {
+        Label username = creaEtichettaProfilo(profiloUtente.fornisciUsername() + "  |");
+        Label stella = new Label("\u2605");
+        stella.setStyle("-fx-text-fill: #FFD43B; -fx-font-size: 18px; -fx-font-weight: bold;");
+        Label punti = creaEtichettaProfilo(profiloUtente.fornisciPuntiFedelta() + " punti");
+
+        HBox contenutoProfilo = new HBox(6, username, stella, punti);
+        contenutoProfilo.setAlignment(Pos.CENTER);
+        return contenutoProfilo;
+    }
+
+    private Label creaEtichettaProfilo(String testo) {
+        Label etichetta = new Label(testo);
+        etichetta.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+        return etichetta;
     }
 }

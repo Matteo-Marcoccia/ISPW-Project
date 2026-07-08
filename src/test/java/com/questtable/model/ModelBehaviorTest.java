@@ -2,6 +2,9 @@ package com.questtable.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,6 +49,26 @@ class ModelBehaviorTest {
     }
 
     @Test
+    void sessioneTavoloRifiutaQuantitaNullaONegativa() {
+        Gioco gioco = new Gioco(TITOLO_CATAN, "/catan.png");
+        SessioneTavolo sessioneTavolo = new SessioneTavolo(
+                1,
+                gioco,
+                4,
+                3,
+                GiornoSettimana.GIOVEDI,
+                "18:00 - 20:00",
+                12.0f
+        );
+
+        assertTrue(sessioneTavolo.verificaPostiNonPrenotabili(0));
+        assertTrue(sessioneTavolo.verificaPostiNonPrenotabili(-1));
+        assertFalse(sessioneTavolo.prenotaPosti(0));
+        assertFalse(sessioneTavolo.prenotaPosti(-1));
+        assertEquals(3, sessioneTavolo.fornisciNumeroPostiDisponibili());
+    }
+
+    @Test
     void prenotazioneNasceInAttesaEPoiVieneConfermata() {
         Cliente cliente = new Cliente("matteo", "1234", 0);
         Gioco gioco = new Gioco(TITOLO_CATAN, "/catan.png");
@@ -65,6 +88,55 @@ class ModelBehaviorTest {
 
         prenotazione.confermaPrenotazione();
 
+        assertEquals(StatoPrenotazione.CONFERMATA, prenotazione.fornisciStatoCorrente());
+    }
+
+    @Test
+    void clienteAggiornaPuntiSenzaScendereSottoZero() {
+        Cliente cliente = new Cliente("matteo", "1234", 10);
+
+        cliente.accreditaPuntiFedelta(15);
+        cliente.accreditaPuntiFedelta(-5);
+        assertEquals(25, cliente.fornisciPuntiFedelta());
+
+        cliente.aggiornaPuntiFedelta(-100);
+        assertEquals(0, cliente.fornisciPuntiFedelta());
+    }
+
+    @Test
+    void prenotazioneRicostruitaEsponeDatiCollegati() {
+        Cliente cliente = new Cliente("matteo", "1234", 0);
+        Gioco gioco = new Gioco(TITOLO_CATAN, "/catan.png");
+        SessioneTavolo sessioneTavolo = new SessioneTavolo(
+                4,
+                gioco,
+                4,
+                2,
+                GiornoSettimana.SABATO,
+                "21:00 - 23:00",
+                12.0f
+        );
+        Prenotazione prenotazione = new Prenotazione(
+                9,
+                cliente,
+                sessioneTavolo,
+                LocalDate.of(2026, 7, 8),
+                LocalTime.of(12, 30),
+                2,
+                24.0f,
+                StatoPrenotazione.CONFERMATA
+        );
+
+        assertEquals(9, prenotazione.fornisciIdentificativo());
+        assertEquals("matteo", prenotazione.fornisciUsernameCliente());
+        assertEquals(TITOLO_CATAN, prenotazione.fornisciTitoloGiocoPrenotato());
+        assertEquals(4, prenotazione.fornisciIdentificativoTavoloPrenotato());
+        assertEquals(GiornoSettimana.SABATO, prenotazione.fornisciGiornoAttivitaPrenotata());
+        assertEquals("21:00 - 23:00", prenotazione.fornisciFasciaOrariaAttivitaPrenotata());
+        assertEquals(LocalDate.of(2026, 7, 8), prenotazione.fornisciDataPrenotazione());
+        assertEquals(LocalTime.of(12, 30), prenotazione.fornisciOraPrenotazione());
+        assertEquals(2, prenotazione.fornisciNumeroPostiPrenotati());
+        assertEquals(24.0f, prenotazione.fornisciImportoTotale());
         assertEquals(StatoPrenotazione.CONFERMATA, prenotazione.fornisciStatoCorrente());
     }
 }

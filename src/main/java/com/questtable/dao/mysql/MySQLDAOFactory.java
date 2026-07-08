@@ -6,19 +6,22 @@ import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
 
 public class MySQLDAOFactory extends DAOFactory {
+    private final MySQLUtenteDAO utenteDAO = new MySQLUtenteDAO();
+    private final MySQLSessioneTavoloDAO sessioneTavoloDAO = new MySQLSessioneTavoloDAO();
+    private final MySQLPrenotazioneDAO prenotazioneDAO = new MySQLPrenotazioneDAO(utenteDAO, sessioneTavoloDAO);
 
     @Override
     public IUtenteDAO fornisciUtenteDAO() {
-        throw new UnsupportedOperationException("Persistenza MySQL non ancora implementata.");
+        return utenteDAO;
     }
 
     @Override
     public ISessioneTavoloDAO fornisciSessioneTavoloDAO() {
-        throw new UnsupportedOperationException("Persistenza MySQL non ancora implementata.");
+        return sessioneTavoloDAO;
     }
 
     @Override
     public IPrenotazioneDAO fornisciPrenotazioneDAO() {
-        throw new UnsupportedOperationException("Persistenza MySQL non ancora implementata.");
+        return prenotazioneDAO;
     }
 }

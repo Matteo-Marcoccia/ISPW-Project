@@ -41,7 +41,8 @@ public class AvvioQuestTable {
                     sceltaValida = true;
                 }
                 case SCELTA_MYSQL -> {
-                    mostraPersistenzaNonDisponibile();
+                    PersistenceConfig.configuraTipoPersistenza(DAOFactory.MYSQL);
+                    sceltaValida = true;
                 }
                 default -> mostraSceltaNonValida();
             }
@@ -74,7 +75,7 @@ public class AvvioQuestTable {
         System.out.println("Seleziona il livello di persistenza");
         System.out.println("1. Demo");
         System.out.println("2. File system");
-        System.out.println("3. MySQL (non ancora disponibile)");
+        System.out.println("3. MySQL");
     }
 
     private void mostraMenuInterfaccia() {
@@ -97,10 +98,6 @@ public class AvvioQuestTable {
 
     private void mostraSceltaNonValida() {
         System.out.println("Scelta non valida.");
-    }
-
-    private void mostraPersistenzaNonDisponibile() {
-        System.out.println("Persistenza non ancora disponibile. Seleziona Demo.");
     }
 
     private void stampaSeparatore() {

@@ -52,6 +52,31 @@ class QuestTableControllerTest {
     }
 
     @Test
+    void loginRifiutaUtenteInesistente() {
+        QuestTableController controller = new QuestTableController();
+        LoginBean loginBean = new LoginBean("nessuno", CREDENZIALE_CLIENTE);
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> controller.effettuaLogin(loginBean)
+        );
+
+        assertEquals("Utente non registrato.", exception.getMessage());
+    }
+
+    @Test
+    void loginRifiutaCredenzialiNonCompilate() {
+        QuestTableController controller = new QuestTableController();
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> controller.effettuaLogin(null)
+        );
+
+        assertEquals("Credenziali non compilate correttamente.", exception.getMessage());
+    }
+
+    @Test
     void ricercaTavoliFiltraPerGiocoEGiorno() {
         QuestTableController controller = new QuestTableController();
         String idSessione = controller.effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
@@ -79,6 +104,30 @@ class QuestTableControllerTest {
     }
 
     @Test
+    void calcolaPreventivoRifiutaRichiestaNonValida() {
+        QuestTableController controller = new QuestTableController();
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> controller.calcolaPreventivo(new RichiestaPreventivoBean(1, 0))
+        );
+
+        assertEquals("Richiesta preventivo non valida.", exception.getMessage());
+    }
+
+    @Test
+    void calcolaPreventivoRifiutaTavoloAssente() {
+        QuestTableController controller = new QuestTableController();
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> controller.calcolaPreventivo(new RichiestaPreventivoBean(99, 1))
+        );
+
+        assertEquals("Tavolo non trovato.", exception.getMessage());
+    }
+
+    @Test
     void registraPrenotazioneDopoPagamentoValido() {
         QuestTableController controller = new QuestTableController();
         String idSessione = controller.effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
@@ -99,5 +148,40 @@ class QuestTableControllerTest {
         ListaPrenotazioniBean listaPrenotazioniBean = controller.fornisciPrenotazioniInAttesa(idSessioneGestore);
 
         assertFalse(listaPrenotazioniBean.verificaAssenzaPrenotazioni());
+    }
+
+    @Test
+    void clienteRecuperaStoricoPrenotazioni() {
+        QuestTableController controller = new QuestTableController();
+        String idSessione = controller.effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
+
+        ListaPrenotazioniBean listaPrenotazioniBean = controller.fornisciPrenotazioniCliente(idSessione);
+
+        assertFalse(listaPrenotazioniBean.verificaAssenzaPrenotazioni());
+    }
+
+    @Test
+    void gestoreConfermaPrenotazione() {
+        QuestTableController controller = new QuestTableController();
+        String idSessioneGestore = controller.effettuaLogin(new LoginBean(USERNAME_GESTORE, CREDENZIALE_GESTORE));
+
+        controller.confermaPrenotazione(idSessioneGestore, 1);
+
+        ListaPrenotazioniBean listaPrenotazioniBean = controller.fornisciPrenotazioniInAttesa(idSessioneGestore);
+        assertTrue(listaPrenotazioniBean.fornisciPrenotazioni()
+                .stream()
+                .noneMatch(prenotazione -> prenotazione.fornisciIdentificativoPrenotazione() == 1));
+    }
+
+    @Test
+    void controllerRifiutaSessioneNonValida() {
+        QuestTableController controller = new QuestTableController();
+
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> controller.fornisciProfiloUtente("sessione-assente")
+        );
+
+        assertEquals("Sessione non valida.", exception.getMessage());
     }
 }

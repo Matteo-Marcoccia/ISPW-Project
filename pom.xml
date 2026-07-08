@@ -31,6 +31,11 @@
             <version>21.0.2</version>
         </dependency>
         <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.2.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.jupiter.version}</version>
@@ -52,6 +57,14 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/questtable/main/AvvioJavaFX*</exclude>
+                        <exclude>com/questtable/view/**</exclude>
+                        <exclude>com/questtable/dao/mysql/**</exclude>
+                        <exclude>com/questtable/dao/file_system/**</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
