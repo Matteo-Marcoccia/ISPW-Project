@@ -13,6 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.11.4</junit.jupiter.version>
         <jacoco.version>0.8.12</jacoco.version>
+        <protobuf.version>3.25.5</protobuf.version>
         <sonar.organization>matteo-marcoccia</sonar.organization>
         <sonar.projectKey>Matteo-Marcoccia_ISPW-Project</sonar.projectKey>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
@@ -34,6 +35,11 @@
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>8.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

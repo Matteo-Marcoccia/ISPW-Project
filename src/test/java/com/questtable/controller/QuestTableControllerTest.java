@@ -87,7 +87,7 @@ class QuestTableControllerTest {
         );
 
         assertTrue(listaTavoliBean.verificaPresenzaTavoli());
-        assertEquals(TITOLO_CATAN, listaTavoliBean.fornisciTavoli().get(0).fornisciTitoloGioco());
+        assertEquals(TITOLO_CATAN, listaTavoliBean.fornisciTavoli().getFirst().fornisciTitoloGioco());
     }
 
     @Test

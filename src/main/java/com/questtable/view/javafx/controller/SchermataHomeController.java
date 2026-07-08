@@ -180,7 +180,7 @@ public class SchermataHomeController {
 
     private HBox creaContenutoProfiloCliente(ProfiloUtenteBean profiloUtente) {
         Label username = creaEtichettaProfilo(profiloUtente.fornisciUsername() + "  |");
-        Label stella = new Label("\u2605");
+        Label stella = new Label("★");
         stella.setStyle("-fx-text-fill: #FFD43B; -fx-font-size: 18px; -fx-font-weight: bold;");
         Label punti = creaEtichettaProfilo(profiloUtente.fornisciPuntiFedelta() + " punti");
 
