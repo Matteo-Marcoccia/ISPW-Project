@@ -3,6 +3,7 @@ package com.questtable.view.cli.controller;
 import java.util.Locale;
 import java.util.Scanner;
 
+@SuppressWarnings("java:S106")
 public final class InterazioneConsole {
 
     private InterazioneConsole() {

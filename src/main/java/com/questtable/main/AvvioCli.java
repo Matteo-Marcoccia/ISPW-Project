@@ -6,6 +6,9 @@ import java.util.Scanner;
 
 public class AvvioCli {
 
+    private AvvioCli() {
+    }
+
     public static void avvia(Scanner scanner) {
         SchermataHomeCliController schermataHomeCliController = new SchermataHomeCliController(scanner);
         schermataHomeCliController.avvia();

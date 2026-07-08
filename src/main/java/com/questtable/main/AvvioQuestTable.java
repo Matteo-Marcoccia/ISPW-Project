@@ -5,6 +5,7 @@ import com.questtable.dao.DAOFactory;
 
 import java.util.Scanner;
 
+@SuppressWarnings("java:S106")
 public class AvvioQuestTable {
     private static final int SCELTA_JAVAFX = 1;
     private static final int SCELTA_CLI = 2;

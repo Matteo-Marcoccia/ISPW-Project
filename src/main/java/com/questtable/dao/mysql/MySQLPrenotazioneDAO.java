@@ -10,11 +10,10 @@ import com.questtable.model.StatoPrenotazione;
 import com.questtable.model.Utente;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +76,8 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
             statement.setInt(3, prenotazione.fornisciIdentificativoTavoloPrenotato());
             statement.setInt(4, prenotazione.fornisciNumeroPostiPrenotati());
             statement.setFloat(5, prenotazione.fornisciImportoTotale());
-            statement.setDate(6, Date.valueOf(prenotazione.fornisciDataPrenotazione()));
-            statement.setTime(7, Time.valueOf(normalizzaOra(prenotazione.fornisciOraPrenotazione())));
+            statement.setObject(6, prenotazione.fornisciDataPrenotazione());
+            statement.setObject(7, normalizzaOra(prenotazione.fornisciOraPrenotazione()));
             statement.setString(8, prenotazione.fornisciStatoCorrente().name());
             statement.executeUpdate();
         } catch (SQLException exception) {
@@ -164,8 +163,8 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
                 risultato.getInt("id_prenotazione"),
                 cliente,
                 tavolo,
-                risultato.getDate("data_prenotazione").toLocalDate(),
-                risultato.getTime("ora_prenotazione").toLocalTime(),
+                risultato.getObject("data_prenotazione", LocalDate.class),
+                risultato.getObject("ora_prenotazione", LocalTime.class),
                 risultato.getInt("posti_prenotati"),
                 risultato.getFloat("importo_totale"),
                 StatoPrenotazione.valueOf(risultato.getString("stato"))
