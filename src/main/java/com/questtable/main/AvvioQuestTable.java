@@ -1,7 +1,6 @@
 package com.questtable.main;
 
 import com.questtable.config.PersistenceConfig;
-import com.questtable.dao.DAOFactory;
 
 import java.util.Scanner;
 
@@ -34,15 +33,15 @@ public class AvvioQuestTable {
 
             switch (scelta) {
                 case SCELTA_DEMO -> {
-                    PersistenceConfig.configuraTipoPersistenza(DAOFactory.DEMO);
+                    PersistenceConfig.configuraTipoPersistenza(PersistenceConfig.DEMO);
                     sceltaValida = true;
                 }
                 case SCELTA_FILE_SYSTEM -> {
-                    PersistenceConfig.configuraTipoPersistenza(DAOFactory.FILE_SYSTEM);
+                    PersistenceConfig.configuraTipoPersistenza(PersistenceConfig.FILE_SYSTEM);
                     sceltaValida = true;
                 }
                 case SCELTA_MYSQL -> {
-                    PersistenceConfig.configuraTipoPersistenza(DAOFactory.MYSQL);
+                    PersistenceConfig.configuraTipoPersistenza(PersistenceConfig.MYSQL);
                     sceltaValida = true;
                 }
                 default -> mostraSceltaNonValida();

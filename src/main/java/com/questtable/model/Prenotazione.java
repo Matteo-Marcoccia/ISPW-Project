@@ -23,25 +23,26 @@ public class Prenotazione {
                 idPrenotazione,
                 cliente,
                 sessioneTavolo,
-                LocalDate.now(OROLOGIO_PRENOTAZIONE),
-                LocalTime.now(OROLOGIO_PRENOTAZIONE),
+                new DatiPrenotazione(
+                        LocalDate.now(OROLOGIO_PRENOTAZIONE),
+                        LocalTime.now(OROLOGIO_PRENOTAZIONE),
+                        StatoPrenotazione.IN_ATTESA
+                ),
                 postiPrenotati,
-                importoTotale,
-                StatoPrenotazione.IN_ATTESA
+                importoTotale
         );
     }
 
     public Prenotazione(int idPrenotazione, Cliente cliente, SessioneTavolo sessioneTavolo,
-                        LocalDate dataPrenotazione, LocalTime oraPrenotazione,
-                        int postiPrenotati, float importoTotale, StatoPrenotazione stato) {
+                        DatiPrenotazione datiPrenotazione, int postiPrenotati, float importoTotale) {
         this.idPrenotazione = idPrenotazione;
         this.cliente = cliente;
         this.sessioneTavolo = sessioneTavolo;
-        this.dataPrenotazione = dataPrenotazione;
-        this.oraPrenotazione = oraPrenotazione;
+        this.dataPrenotazione = datiPrenotazione.fornisciDataPrenotazione();
+        this.oraPrenotazione = datiPrenotazione.fornisciOraPrenotazione();
         this.postiPrenotati = postiPrenotati;
         this.importoTotale = importoTotale;
-        this.stato = stato;
+        this.stato = datiPrenotazione.fornisciStatoPrenotazione();
     }
 
     public int fornisciIdentificativo() {

@@ -1,6 +1,7 @@
 package com.questtable.view.cli.controller;
 
 import com.questtable.bean.PrenotazioneBean;
+import com.questtable.view.FormattatoreImporti;
 
 final class ComponentiPrenotazioneCli {
     private ComponentiPrenotazioneCli() {
@@ -21,7 +22,7 @@ final class ComponentiPrenotazioneCli {
                 + " alle " + prenotazione.fornisciOraPrenotazione());
         InterazioneConsole.stampaMessaggio("Posti: " + prenotazione.fornisciNumeroPostiPrenotati());
         InterazioneConsole.stampaMessaggio("Importo: "
-                + InterazioneConsole.formattaImporto(prenotazione.fornisciImportoTotale()));
+                + FormattatoreImporti.formattaImporto(prenotazione.fornisciImportoTotale()));
         if (mostraStato) {
             InterazioneConsole.stampaMessaggio("Stato: "
                     + prenotazione.fornisciStatoPrenotazione().fornisciNomeVisualizzato());

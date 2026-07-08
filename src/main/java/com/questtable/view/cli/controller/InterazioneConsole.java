@@ -1,6 +1,5 @@
 package com.questtable.view.cli.controller;
 
-import java.util.Locale;
 import java.util.Scanner;
 
 @SuppressWarnings("java:S106")
@@ -37,10 +36,6 @@ public final class InterazioneConsole {
 
     public static void stampaSceltaNonValida() {
         stampaMessaggio("Scelta non valida.");
-    }
-
-    public static String formattaImporto(float importo) {
-        return String.format(Locale.ITALY, "%.2f euro", importo);
     }
 
     private static void stampaRichiesta(String messaggio) {

@@ -4,6 +4,7 @@ import com.questtable.bean.InfoTavoloBean;
 import com.questtable.bean.PreventivoBean;
 import com.questtable.bean.RichiestaPreventivoBean;
 import com.questtable.controller.QuestTableController;
+import com.questtable.view.FormattatoreImporti;
 
 import java.util.Scanner;
 
@@ -60,7 +61,7 @@ public class DettagliTavoloCliController {
         InterazioneConsole.stampaMessaggio("Posti disponibili: "
                 + tavoloSelezionato.fornisciNumeroPostiDisponibili());
         InterazioneConsole.stampaMessaggio("Quota: "
-                + InterazioneConsole.formattaImporto(tavoloSelezionato.fornisciQuotaPartecipazione()));
+                + FormattatoreImporti.formattaImporto(tavoloSelezionato.fornisciQuotaPartecipazione()));
         InterazioneConsole.stampaMessaggio("0. Torna ai tavoli");
     }
 

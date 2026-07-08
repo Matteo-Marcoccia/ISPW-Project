@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class SchermataHomeCliController {
     private static final String TITOLO_APPLICAZIONE = "QuestTable";
+    private static final String VOCE_ESCI = "0. Esci";
 
     private final QuestTableController questTableController = new QuestTableController();
     private final Scanner scanner;
@@ -40,7 +41,7 @@ public class SchermataHomeCliController {
         if (idSessione == null) {
             InterazioneConsole.stampaMessaggio("1. Accedi");
             InterazioneConsole.stampaMessaggio("2. Prenota posto al tavolo");
-            InterazioneConsole.stampaMessaggio("0. Esci");
+            InterazioneConsole.stampaMessaggio(VOCE_ESCI);
             return;
         }
 
@@ -49,13 +50,13 @@ public class SchermataHomeCliController {
             InterazioneConsole.stampaMessaggio("1. Prenota posto al tavolo");
             InterazioneConsole.stampaMessaggio("2. Storico prenotazioni");
             InterazioneConsole.stampaMessaggio("3. Logout");
-            InterazioneConsole.stampaMessaggio("0. Esci");
+            InterazioneConsole.stampaMessaggio(VOCE_ESCI);
             return;
         }
 
         InterazioneConsole.stampaMessaggio("1. Conferma prenotazioni in attesa");
         InterazioneConsole.stampaMessaggio("2. Logout");
-        InterazioneConsole.stampaMessaggio("0. Esci");
+        InterazioneConsole.stampaMessaggio(VOCE_ESCI);
     }
 
     private void mostraProfiloCorrente() {

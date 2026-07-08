@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -105,6 +106,22 @@ class ModelBehaviorTest {
 
     @Test
     void prenotazioneRicostruitaEsponeDatiCollegati() {
+        Prenotazione prenotazione = creaPrenotazioneRicostruita();
+
+        assertEquals(9, prenotazione.fornisciIdentificativo());
+        assertEquals("matteo", prenotazione.fornisciUsernameCliente());
+        assertEquals(TITOLO_CATAN, prenotazione.fornisciTitoloGiocoPrenotato());
+        assertEquals(4, prenotazione.fornisciIdentificativoTavoloPrenotato());
+        assertEquals(GiornoSettimana.SABATO, prenotazione.fornisciGiornoAttivitaPrenotata());
+        assertEquals("21:00 - 23:00", prenotazione.fornisciFasciaOrariaAttivitaPrenotata());
+        assertEquals(LocalDate.of(2026, Month.JULY, 8), prenotazione.fornisciDataPrenotazione());
+        assertEquals(LocalTime.of(12, 30), prenotazione.fornisciOraPrenotazione());
+        assertEquals(2, prenotazione.fornisciNumeroPostiPrenotati());
+        assertEquals(24.0f, prenotazione.fornisciImportoTotale());
+        assertEquals(StatoPrenotazione.CONFERMATA, prenotazione.fornisciStatoCorrente());
+    }
+
+    private Prenotazione creaPrenotazioneRicostruita() {
         Cliente cliente = new Cliente("matteo", "1234", 0);
         Gioco gioco = new Gioco(TITOLO_CATAN, "/catan.png");
         SessioneTavolo sessioneTavolo = new SessioneTavolo(
@@ -116,27 +133,18 @@ class ModelBehaviorTest {
                 "21:00 - 23:00",
                 12.0f
         );
-        Prenotazione prenotazione = new Prenotazione(
+
+        return new Prenotazione(
                 9,
                 cliente,
                 sessioneTavolo,
-                LocalDate.of(2026, 7, 8),
-                LocalTime.of(12, 30),
+                new DatiPrenotazione(
+                        LocalDate.of(2026, Month.JULY, 8),
+                        LocalTime.of(12, 30),
+                        StatoPrenotazione.CONFERMATA
+                ),
                 2,
-                24.0f,
-                StatoPrenotazione.CONFERMATA
+                24.0f
         );
-
-        assertEquals(9, prenotazione.fornisciIdentificativo());
-        assertEquals("matteo", prenotazione.fornisciUsernameCliente());
-        assertEquals(TITOLO_CATAN, prenotazione.fornisciTitoloGiocoPrenotato());
-        assertEquals(4, prenotazione.fornisciIdentificativoTavoloPrenotato());
-        assertEquals(GiornoSettimana.SABATO, prenotazione.fornisciGiornoAttivitaPrenotata());
-        assertEquals("21:00 - 23:00", prenotazione.fornisciFasciaOrariaAttivitaPrenotata());
-        assertEquals(LocalDate.of(2026, 7, 8), prenotazione.fornisciDataPrenotazione());
-        assertEquals(LocalTime.of(12, 30), prenotazione.fornisciOraPrenotazione());
-        assertEquals(2, prenotazione.fornisciNumeroPostiPrenotati());
-        assertEquals(24.0f, prenotazione.fornisciImportoTotale());
-        assertEquals(StatoPrenotazione.CONFERMATA, prenotazione.fornisciStatoCorrente());
     }
 }

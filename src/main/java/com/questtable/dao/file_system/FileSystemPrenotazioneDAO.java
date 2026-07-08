@@ -4,6 +4,7 @@ import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
 import com.questtable.model.Cliente;
+import com.questtable.model.DatiPrenotazione;
 import com.questtable.model.Prenotazione;
 import com.questtable.model.SessioneTavolo;
 import com.questtable.model.StatoPrenotazione;
@@ -126,11 +127,13 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
                 Integer.parseInt(campiPrenotazione[INDICE_ID_PRENOTAZIONE]),
                 cliente,
                 tavolo,
-                LocalDate.parse(campiPrenotazione[INDICE_DATA], FORMATO_DATA),
-                LocalTime.parse(campiPrenotazione[INDICE_ORA], FORMATO_ORA),
+                new DatiPrenotazione(
+                        LocalDate.parse(campiPrenotazione[INDICE_DATA], FORMATO_DATA),
+                        LocalTime.parse(campiPrenotazione[INDICE_ORA], FORMATO_ORA),
+                        StatoPrenotazione.valueOf(campiPrenotazione[INDICE_STATO])
+                ),
                 Integer.parseInt(campiPrenotazione[INDICE_POSTI_PRENOTATI]),
-                Float.parseFloat(campiPrenotazione[INDICE_IMPORTO]),
-                StatoPrenotazione.valueOf(campiPrenotazione[INDICE_STATO])
+                Float.parseFloat(campiPrenotazione[INDICE_IMPORTO])
         );
     }
 

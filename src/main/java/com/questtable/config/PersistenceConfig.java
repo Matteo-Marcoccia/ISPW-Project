@@ -1,14 +1,15 @@
 package com.questtable.config;
 
-import com.questtable.dao.DAOFactory;
-
 public final class PersistenceConfig {
+    public static final int MYSQL = 1;
+    public static final int FILE_SYSTEM = 2;
+    public static final int DEMO = 3;
 
     private static final String MYSQL_URL_PREDEFINITO = "jdbc:mysql://localhost:3306/questtable";
     private static final String MYSQL_UTENTE_PREDEFINITO = "root";
     private static final String MYSQL_CREDENZIALE_PREDEFINITA = "MySQL";
 
-    private static int tipoPersistenza = DAOFactory.DEMO;
+    private static int tipoPersistenza = DEMO;
 
     private PersistenceConfig() {
     }

@@ -4,6 +4,7 @@ import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
 import com.questtable.model.Cliente;
+import com.questtable.model.DatiPrenotazione;
 import com.questtable.model.Prenotazione;
 import com.questtable.model.SessioneTavolo;
 import com.questtable.model.StatoPrenotazione;
@@ -163,11 +164,13 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
                 risultato.getInt("id_prenotazione"),
                 cliente,
                 tavolo,
-                risultato.getObject("data_prenotazione", LocalDate.class),
-                risultato.getObject("ora_prenotazione", LocalTime.class),
+                new DatiPrenotazione(
+                        risultato.getObject("data_prenotazione", LocalDate.class),
+                        risultato.getObject("ora_prenotazione", LocalTime.class),
+                        StatoPrenotazione.valueOf(risultato.getString("stato"))
+                ),
                 risultato.getInt("posti_prenotati"),
-                risultato.getFloat("importo_totale"),
-                StatoPrenotazione.valueOf(risultato.getString("stato"))
+                risultato.getFloat("importo_totale")
         );
     }
 

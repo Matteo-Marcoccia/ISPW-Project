@@ -3,6 +3,7 @@ package com.questtable.view.javafx.controller;
 import com.questtable.bean.ListaPrenotazioniBean;
 import com.questtable.bean.PrenotazioneBean;
 import com.questtable.controller.QuestTableController;
+import com.questtable.view.FormattatoreImporti;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

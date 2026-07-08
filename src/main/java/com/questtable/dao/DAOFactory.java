@@ -8,17 +8,13 @@ import com.questtable.dao.mysql.MySQLDAOFactory;
 @SuppressWarnings("java:S6548")
 public abstract class DAOFactory {
 
-    public static final int MYSQL = 1;
-    public static final int FILE_SYSTEM = 2;
-    public static final int DEMO = 3;
-
     public static DAOFactory fornisciDAOFactory() {
         int tipoPersistenza = PersistenceConfig.fornisciTipoPersistenza();
 
         return switch (tipoPersistenza) {
-            case MYSQL -> MySQLFactoryHolder.ISTANZA;
-            case FILE_SYSTEM -> FileSystemFactoryHolder.ISTANZA;
-            case DEMO -> DemoFactoryHolder.ISTANZA;
+            case PersistenceConfig.MYSQL -> MySQLFactoryHolder.ISTANZA;
+            case PersistenceConfig.FILE_SYSTEM -> FileSystemFactoryHolder.ISTANZA;
+            case PersistenceConfig.DEMO -> DemoFactoryHolder.ISTANZA;
             default -> throw new IllegalStateException("Tipo di persistenza non valido: " + tipoPersistenza);
         };
     }

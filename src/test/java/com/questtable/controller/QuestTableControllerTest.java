@@ -106,10 +106,11 @@ class QuestTableControllerTest {
     @Test
     void calcolaPreventivoRifiutaRichiestaNonValida() {
         QuestTableController controller = new QuestTableController();
+        RichiestaPreventivoBean richiestaPreventivoBean = new RichiestaPreventivoBean(1, 0);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> controller.calcolaPreventivo(new RichiestaPreventivoBean(1, 0))
+                () -> controller.calcolaPreventivo(richiestaPreventivoBean)
         );
 
         assertEquals("Richiesta preventivo non valida.", exception.getMessage());
@@ -118,10 +119,11 @@ class QuestTableControllerTest {
     @Test
     void calcolaPreventivoRifiutaTavoloAssente() {
         QuestTableController controller = new QuestTableController();
+        RichiestaPreventivoBean richiestaPreventivoBean = new RichiestaPreventivoBean(99, 1);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> controller.calcolaPreventivo(new RichiestaPreventivoBean(99, 1))
+                () -> controller.calcolaPreventivo(richiestaPreventivoBean)
         );
 
         assertEquals("Tavolo non trovato.", exception.getMessage());

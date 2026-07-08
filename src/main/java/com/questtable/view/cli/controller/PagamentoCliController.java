@@ -5,6 +5,7 @@ import com.questtable.bean.PrenotazioneBean;
 import com.questtable.bean.PreventivoBean;
 import com.questtable.controller.QuestTableController;
 import com.questtable.model.MetodoPagamento;
+import com.questtable.view.FormattatoreImporti;
 
 import java.util.Scanner;
 
@@ -69,7 +70,7 @@ public class PagamentoCliController {
         InterazioneConsole.stampaMessaggio("Posti richiesti: "
                 + preventivoBean.fornisciNumeroPostiRichiesti());
         InterazioneConsole.stampaMessaggio("Totale: "
-                + InterazioneConsole.formattaImporto(preventivoBean.fornisciImportoTotale()));
+                + FormattatoreImporti.formattaImporto(preventivoBean.fornisciImportoTotale()));
     }
 
     private MetodoPagamento selezionaMetodoPagamento() {

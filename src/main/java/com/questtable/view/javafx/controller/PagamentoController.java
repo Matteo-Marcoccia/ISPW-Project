@@ -6,6 +6,7 @@ import com.questtable.bean.PrenotazioneBean;
 import com.questtable.bean.PreventivoBean;
 import com.questtable.controller.QuestTableController;
 import com.questtable.model.MetodoPagamento;
+import com.questtable.view.FormattatoreImporti;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

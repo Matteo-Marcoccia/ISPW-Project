@@ -5,6 +5,7 @@ import com.questtable.bean.ListaTavoliBean;
 import com.questtable.bean.RicercaTavoliBean;
 import com.questtable.controller.QuestTableController;
 import com.questtable.model.GiornoSettimana;
+import com.questtable.view.FormattatoreImporti;
 
 import java.util.List;
 import java.util.Scanner;
@@ -36,33 +37,33 @@ public class ListaTavoliCliController {
                 int scelta = InterazioneConsole.leggiIntero(scanner, "Seleziona tavolo o comando: ");
 
                 if (scelta == SCELTA_TORNA_HOME) {
-                    return;
-                }
-                if (scelta == SCELTA_FILTRA_TAVOLI) {
+                    listaAttiva = false;
+                } else if (scelta == SCELTA_FILTRA_TAVOLI) {
                     ricercaTavoliBean = creaRicercaTavoliBean();
-                    continue;
-                }
-                if (scelta == SCELTA_PULISCI_FILTRI) {
+                } else if (scelta == SCELTA_PULISCI_FILTRI) {
                     ricercaTavoliBean = null;
-                    continue;
+                } else {
+                    listaAttiva = gestisciSelezioneTavolo(listaTavoliBean, scelta);
                 }
-
-                InfoTavoloBean tavoloSelezionato = selezionaTavoloDallaLista(
-                        listaTavoliBean.fornisciTavoli(),
-                        scelta
-                );
-                if (tavoloSelezionato == null) {
-                    InterazioneConsole.stampaSceltaNonValida();
-                    continue;
-                }
-
-                DettagliTavoloCliController dettagliTavoloCliController =
-                        new DettagliTavoloCliController(questTableController, scanner, idSessione);
-                listaAttiva = !dettagliTavoloCliController.apri(tavoloSelezionato);
             }
         } catch (IllegalArgumentException | IllegalStateException exception) {
             InterazioneConsole.stampaMessaggio(exception.getMessage());
         }
+    }
+
+    private boolean gestisciSelezioneTavolo(ListaTavoliBean listaTavoliBean, int scelta) {
+        InfoTavoloBean tavoloSelezionato = selezionaTavoloDallaLista(
+                listaTavoliBean.fornisciTavoli(),
+                scelta
+        );
+        if (tavoloSelezionato == null) {
+            InterazioneConsole.stampaSceltaNonValida();
+            return true;
+        }
+
+        DettagliTavoloCliController dettagliTavoloCliController =
+                new DettagliTavoloCliController(questTableController, scanner, idSessione);
+        return !dettagliTavoloCliController.apri(tavoloSelezionato);
     }
 
     private InfoTavoloBean selezionaTavoloDallaLista(List<InfoTavoloBean> tavoli, int scelta) {
@@ -89,7 +90,7 @@ public class ListaTavoliCliController {
                     + " | " + tavolo.fornisciGiornoSettimana().fornisciNomeVisualizzato()
                     + " | " + tavolo.fornisciFasciaOraria()
                     + " | posti disponibili: " + tavolo.fornisciNumeroPostiDisponibili()
-                    + " | quota: " + InterazioneConsole.formattaImporto(tavolo.fornisciQuotaPartecipazione()));
+                    + " | quota: " + FormattatoreImporti.formattaImporto(tavolo.fornisciQuotaPartecipazione()));
         }
 
         InterazioneConsole.stampaMessaggio("0. Torna alla home");

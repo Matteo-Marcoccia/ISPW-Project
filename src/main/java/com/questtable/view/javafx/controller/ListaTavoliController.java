@@ -5,6 +5,7 @@ import com.questtable.bean.ListaTavoliBean;
 import com.questtable.bean.RicercaTavoliBean;
 import com.questtable.controller.QuestTableController;
 import com.questtable.model.GiornoSettimana;
+import com.questtable.view.FormattatoreImporti;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
