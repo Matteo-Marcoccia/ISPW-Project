@@ -84,9 +84,10 @@ class BeanValidationTest {
                 12.0f
         );
         ListaTavoliBean listaTavoliBean = new ListaTavoliBean(List.of(tavolo));
+        List<InfoTavoloBean> tavoliNonModificabili = listaTavoliBean.fornisciTavoli();
 
         assertTrue(listaTavoliBean.verificaPresenzaTavoli());
-        assertThrows(UnsupportedOperationException.class, () -> listaTavoliBean.fornisciTavoli().clear());
+        assertThrows(UnsupportedOperationException.class, tavoliNonModificabili::clear);
     }
 
     @Test
@@ -168,9 +169,10 @@ class BeanValidationTest {
                 StatoPrenotazione.CONFERMATA
         );
         ListaPrenotazioniBean listaPrenotazioniBean = new ListaPrenotazioniBean(List.of(prenotazioneBean));
+        List<PrenotazioneBean> prenotazioniNonModificabili = listaPrenotazioniBean.fornisciPrenotazioni();
 
         assertFalse(listaPrenotazioniBean.verificaAssenzaPrenotazioni());
-        assertThrows(UnsupportedOperationException.class, () -> listaPrenotazioniBean.fornisciPrenotazioni().clear());
+        assertThrows(UnsupportedOperationException.class, prenotazioniNonModificabili::clear);
     }
 
     @Test

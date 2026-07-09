@@ -36,15 +36,18 @@ public class ListaTavoliCliController {
                 mostraTavoliDisponibili(listaTavoliBean.fornisciTavoli(), ricercaTavoliBean);
                 int scelta = InterazioneConsole.leggiIntero(scanner, "Seleziona tavolo o comando: ");
 
-                if (scelta == SCELTA_TORNA_HOME) {
-                    listaAttiva = false;
-                } else if (scelta == SCELTA_FILTRA_TAVOLI) {
-                    ricercaTavoliBean = creaRicercaTavoliBean();
-                } else if (scelta == SCELTA_PULISCI_FILTRI) {
-                    ricercaTavoliBean = null;
-                } else {
-                    listaAttiva = gestisciSelezioneTavolo(listaTavoliBean, scelta);
-                }
+                listaAttiva = switch (scelta) {
+                    case SCELTA_TORNA_HOME -> false;
+                    case SCELTA_FILTRA_TAVOLI -> {
+                        ricercaTavoliBean = creaRicercaTavoliBean();
+                        yield true;
+                    }
+                    case SCELTA_PULISCI_FILTRI -> {
+                        ricercaTavoliBean = null;
+                        yield true;
+                    }
+                    default -> gestisciSelezioneTavolo(listaTavoliBean, scelta);
+                };
             }
         } catch (IllegalArgumentException | IllegalStateException exception) {
             InterazioneConsole.stampaMessaggio(exception.getMessage());
