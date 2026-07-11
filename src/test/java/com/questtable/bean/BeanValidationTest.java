@@ -176,6 +176,23 @@ class BeanValidationTest {
     }
 
     @Test
+    void listaNotificheEsponeCopiaNonModificabile() {
+        ListaNotificheBean listaNotificheBean = new ListaNotificheBean(List.of("Prima notifica", "Seconda notifica"));
+        List<String> notificheNonModificabili = listaNotificheBean.fornisciMessaggi();
+
+        assertFalse(listaNotificheBean.verificaAssenzaNotifiche());
+        assertEquals(2, notificheNonModificabili.size());
+        assertThrows(UnsupportedOperationException.class, notificheNonModificabili::clear);
+    }
+
+    @Test
+    void listaNotificheRiconosceAssenzaMessaggi() {
+        ListaNotificheBean listaNotificheBean = new ListaNotificheBean(List.of());
+
+        assertTrue(listaNotificheBean.verificaAssenzaNotifiche());
+    }
+
+    @Test
     void profiloUtenteBeanRiconosceRuoloEPunti() {
         ProfiloUtenteBean profiloUtenteBean = new ProfiloUtenteBean(USERNAME_CLIENTE, RuoloUtente.CLIENTE, 120);
 

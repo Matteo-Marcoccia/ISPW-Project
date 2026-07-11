@@ -18,6 +18,7 @@
         <sonar.projectKey>Matteo-Marcoccia_ISPW-Project</sonar.projectKey>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>**/AvvioJavaFX.java,**/view/**,**/dao/mysql/**,**/dao/file_system/**</sonar.coverage.exclusions>
+        <sonar.cpd.exclusions>**/dao/*/*DAO.java,**/dao/*/*DAOFactory.java</sonar.cpd.exclusions>
     </properties>
 
     <dependencies>
