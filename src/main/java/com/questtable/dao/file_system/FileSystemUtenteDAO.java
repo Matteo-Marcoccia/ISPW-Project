@@ -8,7 +8,9 @@ import com.questtable.model.Utente;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FileSystemUtenteDAO implements IUtenteDAO {
     private static final String SEPARATORE_CAMPI = ";";
@@ -18,14 +20,22 @@ public class FileSystemUtenteDAO implements IUtenteDAO {
     private static final int INDICE_RUOLO = 2;
     private static final int INDICE_PUNTI_FEDELTA = 3;
 
+    private final Map<String, Utente> utentiInMemoria = new HashMap<>();
+
     @Override
     public Utente recuperaUtente(String username) {
+        if (utentiInMemoria.containsKey(username)) {
+            return utentiInMemoria.get(username);
+        }
+
         inizializzaArchivioSeNecessario();
 
         for (String rigaUtente : leggiRigheUtenti()) {
             String[] campiUtente = dividiCampiUtente(rigaUtente);
             if (verificaRigaUtenteCercato(campiUtente, username)) {
-                return creaUtenteDa(campiUtente);
+                Utente utente = creaUtenteDa(campiUtente);
+                utentiInMemoria.put(username, utente);
+                return utente;
             }
         }
 
@@ -48,6 +58,7 @@ public class FileSystemUtenteDAO implements IUtenteDAO {
         }
 
         salvaRigheUtenti(righeAggiornate);
+        aggiornaUtenteInMemoria(username, puntiFedelta);
     }
 
     private Utente creaUtenteDa(String[] campiUtente) {
@@ -61,6 +72,13 @@ public class FileSystemUtenteDAO implements IUtenteDAO {
         }
 
         return new Utente(campiUtente[INDICE_USERNAME], campiUtente[INDICE_PASSWORD], ruolo);
+    }
+
+    private void aggiornaUtenteInMemoria(String username, int puntiFedelta) {
+        Utente utente = utentiInMemoria.get(username);
+        if (utente instanceof Cliente cliente) {
+            cliente.aggiornaPuntiFedelta(puntiFedelta);
+        }
     }
 
     private String[] dividiCampiUtente(String rigaUtente) {
@@ -101,6 +119,7 @@ public class FileSystemUtenteDAO implements IUtenteDAO {
     private List<String> creaRigheUtentiIniziali() {
         return List.of(
                 "matteo;1234;CLIENTE;0",
+                "erik;1234;CLIENTE;0",
                 "admin;admin;GESTORE;0"
         );
     }

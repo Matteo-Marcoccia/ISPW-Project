@@ -17,7 +17,11 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
     private static final String QUERY_SALVA_PRENOTAZIONE = """
@@ -61,6 +65,9 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
 
     private final IUtenteDAO utenteDAO;
     private final ISessioneTavoloDAO sessioneTavoloDAO;
+    private final Map<Integer, Prenotazione> prenotazioniInMemoria = new LinkedHashMap<>();
+    private final Set<String> storiciClienteCaricati = new HashSet<>();
+    private boolean prenotazioniInAttesaCaricate;
 
     public MySQLPrenotazioneDAO(IUtenteDAO utenteDAO, ISessioneTavoloDAO sessioneTavoloDAO) {
         this.utenteDAO = utenteDAO;
@@ -81,6 +88,7 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
             statement.setObject(7, normalizzaOra(prenotazione.fornisciOraPrenotazione()));
             statement.setString(8, prenotazione.fornisciStatoCorrente().name());
             statement.executeUpdate();
+            prenotazioniInMemoria.put(prenotazione.fornisciIdentificativo(), prenotazione);
         } catch (SQLException exception) {
             throw new IllegalStateException("Impossibile salvare la prenotazione sul database.", exception);
         }
@@ -88,13 +96,19 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
 
     @Override
     public Prenotazione recuperaPrenotazione(int idPrenotazione) {
+        if (prenotazioniInMemoria.containsKey(idPrenotazione)) {
+            return prenotazioniInMemoria.get(idPrenotazione);
+        }
+
         try (Connection connessione = MySQLConnectionManager.apriConnessione();
              PreparedStatement statement = connessione.prepareStatement(QUERY_RECUPERA_PRENOTAZIONE)) {
 
             statement.setInt(1, idPrenotazione);
             try (ResultSet risultato = statement.executeQuery()) {
                 if (risultato.next()) {
-                    return creaPrenotazioneDa(risultato);
+                    Prenotazione prenotazione = creaPrenotazioneDa(risultato);
+                    prenotazioniInMemoria.put(idPrenotazione, prenotazione);
+                    return prenotazione;
                 }
             }
 
@@ -106,26 +120,60 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
 
     @Override
     public List<Prenotazione> recuperaPrenotazioniCliente(String usernameCliente) {
-        try (Connection connessione = MySQLConnectionManager.apriConnessione();
-             PreparedStatement statement = connessione.prepareStatement(QUERY_PRENOTAZIONI_CLIENTE)) {
+        if (!storiciClienteCaricati.contains(usernameCliente)) {
+            try (Connection connessione = MySQLConnectionManager.apriConnessione();
+                 PreparedStatement statement = connessione.prepareStatement(QUERY_PRENOTAZIONI_CLIENTE)) {
 
-            statement.setString(1, usernameCliente);
-            return recuperaPrenotazioniDa(statement);
-        } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile recuperare le prenotazioni del cliente dal database.", exception);
+                statement.setString(1, usernameCliente);
+                for (Prenotazione prenotazione : recuperaPrenotazioniDa(statement)) {
+                    prenotazioniInMemoria.put(prenotazione.fornisciIdentificativo(), prenotazione);
+                }
+                storiciClienteCaricati.add(usernameCliente);
+            } catch (SQLException exception) {
+                throw new IllegalStateException(
+                        "Impossibile recuperare le prenotazioni del cliente dal database.",
+                        exception
+                );
+            }
         }
+
+        List<Prenotazione> prenotazioniCliente = new ArrayList<>();
+        for (Prenotazione prenotazione : prenotazioniInMemoria.values()) {
+            if (prenotazione.fornisciUsernameCliente().equals(usernameCliente)) {
+                prenotazioniCliente.add(prenotazione);
+            }
+        }
+
+        return prenotazioniCliente;
     }
 
     @Override
     public List<Prenotazione> recuperaPrenotazioniInAttesa() {
-        try (Connection connessione = MySQLConnectionManager.apriConnessione();
-             PreparedStatement statement = connessione.prepareStatement(QUERY_PRENOTAZIONI_IN_ATTESA)) {
+        if (!prenotazioniInAttesaCaricate) {
+            try (Connection connessione = MySQLConnectionManager.apriConnessione();
+                 PreparedStatement statement = connessione.prepareStatement(QUERY_PRENOTAZIONI_IN_ATTESA)) {
 
-            statement.setString(1, StatoPrenotazione.IN_ATTESA.name());
-            return recuperaPrenotazioniDa(statement);
-        } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile recuperare le prenotazioni in attesa dal database.", exception);
+                statement.setString(1, StatoPrenotazione.IN_ATTESA.name());
+                for (Prenotazione prenotazione : recuperaPrenotazioniDa(statement)) {
+                    prenotazioniInMemoria.put(prenotazione.fornisciIdentificativo(), prenotazione);
+                }
+                prenotazioniInAttesaCaricate = true;
+            } catch (SQLException exception) {
+                throw new IllegalStateException(
+                        "Impossibile recuperare le prenotazioni in attesa dal database.",
+                        exception
+                );
+            }
         }
+
+        List<Prenotazione> prenotazioniInAttesa = new ArrayList<>();
+        for (Prenotazione prenotazione : prenotazioniInMemoria.values()) {
+            if (prenotazione.fornisciStatoCorrente() == StatoPrenotazione.IN_ATTESA) {
+                prenotazioniInAttesa.add(prenotazione);
+            }
+        }
+
+        return prenotazioniInAttesa;
     }
 
     @Override
@@ -135,7 +183,9 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
 
             statement.setString(1, StatoPrenotazione.CONFERMATA.name());
             statement.setInt(2, idPrenotazione);
-            statement.executeUpdate();
+            if (statement.executeUpdate() == 1) {
+                confermaPrenotazioneInMemoria(idPrenotazione);
+            }
         } catch (SQLException exception) {
             throw new IllegalStateException("Impossibile confermare la prenotazione sul database.", exception);
         }
@@ -185,6 +235,13 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
 
     private SessioneTavolo recuperaSessioneTavolo(int idTavolo) {
         return sessioneTavoloDAO.recuperaTavolo(idTavolo);
+    }
+
+    private void confermaPrenotazioneInMemoria(int idPrenotazione) {
+        Prenotazione prenotazione = prenotazioniInMemoria.get(idPrenotazione);
+        if (prenotazione != null) {
+            prenotazione.confermaPrenotazione();
+        }
     }
 
     private LocalTime normalizzaOra(LocalTime oraPrenotazione) {

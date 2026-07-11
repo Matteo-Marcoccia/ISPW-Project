@@ -1,16 +1,15 @@
 package com.questtable.session;
 
 import com.questtable.model.RuoloUtente;
+import com.questtable.model.Utente;
 
 public class Session {
     private final String idSessione;
-    private final String username;
-    private final RuoloUtente ruolo;
+    private final Utente utente;
 
-    public Session(String idSessione, String username, RuoloUtente ruolo) {
+    public Session(String idSessione, Utente utente) {
         this.idSessione = idSessione;
-        this.username = username;
-        this.ruolo = ruolo;
+        this.utente = utente;
     }
 
     public String fornisciIdentificativoSessione() {
@@ -18,10 +17,10 @@ public class Session {
     }
 
     public String fornisciUsername() {
-        return username;
+        return utente.fornisciUsername();
     }
 
     public boolean verificaRuolo(RuoloUtente ruoloRichiesto) {
-        return ruolo == ruoloRichiesto;
+        return utente.fornisciRuolo() == ruoloRichiesto;
     }
 }

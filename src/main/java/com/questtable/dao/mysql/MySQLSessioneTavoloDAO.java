@@ -10,7 +10,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MySQLSessioneTavoloDAO implements ISessioneTavoloDAO {
     private static final String QUERY_BASE_TAVOLI_DISPONIBILI = """
@@ -35,36 +39,53 @@ public class MySQLSessioneTavoloDAO implements ISessioneTavoloDAO {
     private static final String FILTRO_GIORNO = " AND giorno_settimana = ?";
     private static final String ORDINAMENTO_TAVOLI = " ORDER BY id_tavolo";
 
+    private final Map<Integer, SessioneTavolo> tavoliInMemoria = new LinkedHashMap<>();
+    private final Set<String> ricercheGiaEseguite = new HashSet<>();
+
     @Override
     public List<SessioneTavolo> cercaTavoliDisponibili(String titoloGioco, GiornoSettimana giornoSettimana) {
-        List<SessioneTavolo> tavoliDisponibili = new ArrayList<>();
-        String query = creaQueryRicercaTavoli(titoloGioco, giornoSettimana);
+        String chiaveRicerca = creaChiaveRicerca(titoloGioco, giornoSettimana);
+        if (!ricercheGiaEseguite.contains(chiaveRicerca)) {
+            String query = creaQueryRicercaTavoli(titoloGioco, giornoSettimana);
 
-        try (Connection connessione = MySQLConnectionManager.apriConnessione();
-             PreparedStatement statement = connessione.prepareStatement(query)) {
+            try (Connection connessione = MySQLConnectionManager.apriConnessione();
+                 PreparedStatement statement = connessione.prepareStatement(query)) {
 
-            valorizzaParametriRicerca(statement, titoloGioco, giornoSettimana);
-            try (ResultSet risultato = statement.executeQuery()) {
-                while (risultato.next()) {
-                    tavoliDisponibili.add(creaTavoloDa(risultato));
+                valorizzaParametriRicerca(statement, titoloGioco, giornoSettimana);
+                for (SessioneTavolo tavolo : recuperaTavoliDa(statement)) {
+                    tavoliInMemoria.put(tavolo.fornisciIdentificativo(), tavolo);
                 }
+                ricercheGiaEseguite.add(chiaveRicerca);
+            } catch (SQLException exception) {
+                throw new IllegalStateException("Impossibile recuperare i tavoli disponibili dal database.", exception);
             }
-
-            return tavoliDisponibili;
-        } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile recuperare i tavoli disponibili dal database.", exception);
         }
+
+        List<SessioneTavolo> tavoliDisponibili = new ArrayList<>();
+        for (SessioneTavolo tavolo : tavoliInMemoria.values()) {
+            if (verificaTavoloDisponibile(tavolo, titoloGioco, giornoSettimana)) {
+                tavoliDisponibili.add(tavolo);
+            }
+        }
+
+        return tavoliDisponibili;
     }
 
     @Override
     public SessioneTavolo recuperaTavolo(int idTavolo) {
+        if (tavoliInMemoria.containsKey(idTavolo)) {
+            return tavoliInMemoria.get(idTavolo);
+        }
+
         try (Connection connessione = MySQLConnectionManager.apriConnessione();
              PreparedStatement statement = connessione.prepareStatement(QUERY_RECUPERA_TAVOLO)) {
 
             statement.setInt(1, idTavolo);
             try (ResultSet risultato = statement.executeQuery()) {
                 if (risultato.next()) {
-                    return creaTavoloDa(risultato);
+                    SessioneTavolo tavolo = creaTavoloDa(risultato);
+                    tavoliInMemoria.put(idTavolo, tavolo);
+                    return tavolo;
                 }
             }
 
@@ -86,7 +107,12 @@ public class MySQLSessioneTavoloDAO implements ISessioneTavoloDAO {
             statement.setInt(1, postiRichiesti);
             statement.setInt(2, idTavolo);
             statement.setInt(3, postiRichiesti);
-            return statement.executeUpdate() == 1;
+            boolean postiPrenotati = statement.executeUpdate() == 1;
+            if (postiPrenotati) {
+                aggiornaTavoloInMemoria(idTavolo, postiRichiesti);
+            }
+
+            return postiPrenotati;
         } catch (SQLException exception) {
             throw new IllegalStateException("Impossibile prenotare i posti del tavolo sul database.", exception);
         }
@@ -123,6 +149,56 @@ public class MySQLSessioneTavoloDAO implements ISessioneTavoloDAO {
 
     private boolean verificaTitoloPresente(String titoloGioco) {
         return titoloGioco != null && !titoloGioco.trim().isEmpty();
+    }
+
+    private boolean verificaTavoloDisponibile(SessioneTavolo tavolo, String titoloGioco,
+                                              GiornoSettimana giornoSettimana) {
+        return tavolo.fornisciNumeroPostiDisponibili() > 0
+                && verificaTitoloCompatibile(tavolo, titoloGioco)
+                && verificaGiornoCompatibile(tavolo, giornoSettimana);
+    }
+
+    private boolean verificaTitoloCompatibile(SessioneTavolo tavolo, String titoloGioco) {
+        return !verificaTitoloPresente(titoloGioco)
+                || tavolo.fornisciTitoloGiocoAssociato()
+                .toLowerCase()
+                .contains(titoloGioco.trim().toLowerCase());
+    }
+
+    private boolean verificaGiornoCompatibile(SessioneTavolo tavolo, GiornoSettimana giornoSettimana) {
+        return giornoSettimana == null || tavolo.fornisciGiornoSettimana() == giornoSettimana;
+    }
+
+    private void aggiornaTavoloInMemoria(int idTavolo, int postiRichiesti) {
+        SessioneTavolo tavolo = tavoliInMemoria.get(idTavolo);
+        if (tavolo != null) {
+            tavolo.prenotaPosti(postiRichiesti);
+        }
+    }
+
+    private String creaChiaveRicerca(String titoloGioco, GiornoSettimana giornoSettimana) {
+        String titoloNormalizzato = "";
+        if (titoloGioco != null) {
+            titoloNormalizzato = titoloGioco.trim().toLowerCase();
+        }
+
+        String giornoNormalizzato = "";
+        if (giornoSettimana != null) {
+            giornoNormalizzato = giornoSettimana.name();
+        }
+
+        return titoloNormalizzato + "|" + giornoNormalizzato;
+    }
+
+    private List<SessioneTavolo> recuperaTavoliDa(PreparedStatement statement) throws SQLException {
+        List<SessioneTavolo> tavoli = new ArrayList<>();
+        try (ResultSet risultato = statement.executeQuery()) {
+            while (risultato.next()) {
+                tavoli.add(creaTavoloDa(risultato));
+            }
+        }
+
+        return tavoli;
     }
 
     private SessioneTavolo creaTavoloDa(ResultSet risultato) throws SQLException {

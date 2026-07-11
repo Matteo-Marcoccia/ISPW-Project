@@ -85,11 +85,15 @@ class ModelBehaviorTest {
         Prenotazione prenotazione = new Prenotazione(1, cliente, sessioneTavolo, 2, 24.0f);
 
         assertEquals(StatoPrenotazione.IN_ATTESA, prenotazione.fornisciStatoCorrente());
-        assertEquals(240, prenotazione.calcolaPuntiFedeltaDaAccreditare());
 
         prenotazione.confermaPrenotazione();
 
         assertEquals(StatoPrenotazione.CONFERMATA, prenotazione.fornisciStatoCorrente());
+    }
+
+    @Test
+    void regolaPuntiFedeltaCalcolaPuntiDaImporto() {
+        assertEquals(240, RegolaPuntiFedelta.calcolaPuntiPer(24.0f));
     }
 
     @Test

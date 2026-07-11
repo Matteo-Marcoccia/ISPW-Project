@@ -1,8 +1,10 @@
 package com.questtable.view.javafx.controller;
 
+import com.questtable.bean.ListaNotificheBean;
 import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.controller.QuestTableController;
 import com.questtable.model.RuoloUtente;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
@@ -14,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.StringJoiner;
 
 public class SchermataHomeController {
     private final QuestTableController questTableController = new QuestTableController();
@@ -72,6 +75,7 @@ public class SchermataHomeController {
                     + "-fx-border-color: rgba(178, 255, 244, 0.45); -fx-border-radius: 16; -fx-border-width: 1;");
             btnStoricoPrenotazioni.setVisible(true);
             btnStoricoPrenotazioni.setManaged(true);
+            pianificaConsegnaNotifiche();
             return;
         }
 
@@ -83,6 +87,7 @@ public class SchermataHomeController {
         boxShop.setManaged(false);
         boxGestore.setVisible(true);
         boxGestore.setManaged(true);
+        pianificaConsegnaNotifiche();
     }
 
     @FXML
@@ -193,5 +198,23 @@ public class SchermataHomeController {
         Label etichetta = new Label(testo);
         etichetta.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
         return etichetta;
+    }
+
+    private void consegnaNotifiche() {
+        ListaNotificheBean notifiche = questTableController.consegnaNotificheNonLette(idSessione);
+        if (notifiche.verificaAssenzaNotifiche()) {
+            return;
+        }
+
+        StringJoiner messaggi = new StringJoiner(System.lineSeparator());
+        for (String messaggio : notifiche.fornisciMessaggi()) {
+            messaggi.add(messaggio);
+        }
+
+        MessaggiGrafici.mostraNotifiche(messaggi.toString());
+    }
+
+    private void pianificaConsegnaNotifiche() {
+        Platform.runLater(this::consegnaNotifiche);
     }
 }

@@ -18,6 +18,10 @@ public class Cliente extends Utente {
         }
     }
 
+    public void riceviPuntiFedeltaDa(float importo) {
+        accreditaPuntiFedelta(RegolaPuntiFedelta.calcolaPuntiPer(importo));
+    }
+
     public void aggiornaPuntiFedelta(int puntiFedelta) {
         this.puntiFedelta = Math.max(0, puntiFedelta);
     }

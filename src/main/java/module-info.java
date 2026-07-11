@@ -10,6 +10,7 @@ module com.questtable {
     exports com.questtable.dao;
     exports com.questtable.model;
     exports com.questtable.session;
+    opens com.questtable.main to javafx.graphics;
     opens com.questtable.view.javafx.controller to javafx.fxml;
     exports com.questtable.view.javafx.controller;
 }

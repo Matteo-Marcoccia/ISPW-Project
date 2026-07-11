@@ -56,10 +56,6 @@ public class SessioneTavolo {
         return quota * postiRichiesti;
     }
 
-    public int calcolaPuntiFedeltaPer(int postiRichiesti) {
-        return Math.round(calcolaImportoPer(postiRichiesti) * 10);
-    }
-
     public boolean verificaPostiNonPrenotabili(int postiRichiesti) {
         return postiRichiesti <= 0 || postiRichiesti > postiDisponibili;
     }

@@ -4,6 +4,7 @@ import com.questtable.bean.InfoTavoloBean;
 import com.questtable.bean.PreventivoBean;
 import com.questtable.bean.RichiestaPreventivoBean;
 import com.questtable.controller.QuestTableController;
+import com.questtable.model.RegolaPuntiFedelta;
 import com.questtable.view.FormattatoreImporti;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -130,7 +131,7 @@ public class DettagliTavoloController {
 
     private void aggiornaRiepilogo() {
         float costoTotale = tavoloSelezionato.fornisciQuotaPartecipazione() * numeroPartecipanti;
-        int puntiFedeltaPrevisti = Math.round(costoTotale * 10);
+        int puntiFedeltaPrevisti = RegolaPuntiFedelta.calcolaPuntiPer(costoTotale);
 
         lblNumeroPartecipanti.setText(String.valueOf(numeroPartecipanti));
         lblRiepilogoPartecipanti.setText(String.valueOf(numeroPartecipanti));

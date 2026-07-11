@@ -8,7 +8,11 @@ import com.questtable.model.SessioneTavolo;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class FileSystemSessioneTavoloDAO implements ISessioneTavoloDAO {
     private static final String SEPARATORE_CAMPI = ";";
@@ -22,18 +26,32 @@ public class FileSystemSessioneTavoloDAO implements ISessioneTavoloDAO {
     private static final int INDICE_FASCIA_ORARIA = 6;
     private static final int INDICE_QUOTA = 7;
 
+    private final Map<Integer, SessioneTavolo> tavoliInMemoria = new LinkedHashMap<>();
+    private final Set<String> ricercheGiaEseguite = new HashSet<>();
+
     @Override
     public List<SessioneTavolo> cercaTavoliDisponibili(String titoloGioco, GiornoSettimana giornoSettimana) {
-        inizializzaArchivioSeNecessario();
+        String chiaveRicerca = creaChiaveRicerca(titoloGioco, giornoSettimana);
+        if (!ricercheGiaEseguite.contains(chiaveRicerca)) {
+            inizializzaArchivioSeNecessario();
+
+            for (String rigaTavolo : leggiRigheTavoli()) {
+                String[] campiTavolo = dividiCampiTavolo(rigaTavolo);
+                if (verificaRigaTavoloValida(campiTavolo)) {
+                    SessioneTavolo tavolo = creaTavoloDa(campiTavolo);
+                    if (verificaTavoloDisponibile(tavolo, titoloGioco, giornoSettimana)) {
+                        tavoliInMemoria.put(tavolo.fornisciIdentificativo(), tavolo);
+                    }
+                }
+            }
+
+            ricercheGiaEseguite.add(chiaveRicerca);
+        }
 
         List<SessioneTavolo> tavoliDisponibili = new ArrayList<>();
-        for (String rigaTavolo : leggiRigheTavoli()) {
-            String[] campiTavolo = dividiCampiTavolo(rigaTavolo);
-            if (verificaRigaTavoloValida(campiTavolo)) {
-                SessioneTavolo tavolo = creaTavoloDa(campiTavolo);
-                if (verificaTavoloDisponibile(tavolo, titoloGioco, giornoSettimana)) {
-                    tavoliDisponibili.add(tavolo);
-                }
+        for (SessioneTavolo tavolo : tavoliInMemoria.values()) {
+            if (verificaTavoloDisponibile(tavolo, titoloGioco, giornoSettimana)) {
+                tavoliDisponibili.add(tavolo);
             }
         }
 
@@ -42,12 +60,18 @@ public class FileSystemSessioneTavoloDAO implements ISessioneTavoloDAO {
 
     @Override
     public SessioneTavolo recuperaTavolo(int idTavolo) {
+        if (tavoliInMemoria.containsKey(idTavolo)) {
+            return tavoliInMemoria.get(idTavolo);
+        }
+
         inizializzaArchivioSeNecessario();
 
         for (String rigaTavolo : leggiRigheTavoli()) {
             String[] campiTavolo = dividiCampiTavolo(rigaTavolo);
             if (verificaRigaTavoloCercato(campiTavolo, idTavolo)) {
-                return creaTavoloDa(campiTavolo);
+                SessioneTavolo tavolo = creaTavoloDa(campiTavolo);
+                tavoliInMemoria.put(idTavolo, tavolo);
+                return tavolo;
             }
         }
 
@@ -74,6 +98,7 @@ public class FileSystemSessioneTavoloDAO implements ISessioneTavoloDAO {
 
         if (postiPrenotati) {
             salvaRigheTavoli(righeAggiornate);
+            aggiornaTavoloInMemoria(idTavolo, postiRichiesti);
         }
 
         return postiPrenotati;
@@ -95,6 +120,27 @@ public class FileSystemSessioneTavoloDAO implements ISessioneTavoloDAO {
 
     private boolean verificaGiornoCompatibile(SessioneTavolo tavolo, GiornoSettimana giornoSettimana) {
         return giornoSettimana == null || tavolo.fornisciGiornoSettimana() == giornoSettimana;
+    }
+
+    private void aggiornaTavoloInMemoria(int idTavolo, int postiRichiesti) {
+        SessioneTavolo tavolo = tavoliInMemoria.get(idTavolo);
+        if (tavolo != null) {
+            tavolo.prenotaPosti(postiRichiesti);
+        }
+    }
+
+    private String creaChiaveRicerca(String titoloGioco, GiornoSettimana giornoSettimana) {
+        String titoloNormalizzato = "";
+        if (titoloGioco != null) {
+            titoloNormalizzato = titoloGioco.trim().toLowerCase();
+        }
+
+        String giornoNormalizzato = "";
+        if (giornoSettimana != null) {
+            giornoNormalizzato = giornoSettimana.name();
+        }
+
+        return titoloNormalizzato + "|" + giornoNormalizzato;
     }
 
     private SessioneTavolo creaTavoloDa(String[] campiTavolo) {

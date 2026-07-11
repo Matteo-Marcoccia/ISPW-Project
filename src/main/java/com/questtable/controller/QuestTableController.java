@@ -1,6 +1,7 @@
 package com.questtable.controller;
 
 import com.questtable.bean.InfoTavoloBean;
+import com.questtable.bean.ListaNotificheBean;
 import com.questtable.bean.ListaPrenotazioniBean;
 import com.questtable.bean.ListaTavoliBean;
 import com.questtable.bean.LoginBean;
@@ -13,14 +14,19 @@ import com.questtable.bean.RicercaTavoliBean;
 import com.questtable.bean.RichiestaPreventivoBean;
 import com.questtable.bean.TavoloPrenotatoBean;
 import com.questtable.dao.DAOFactory;
+import com.questtable.dao.INotificaDAO;
 import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
 import com.questtable.model.Cliente;
 import com.questtable.model.GiornoSettimana;
+import com.questtable.model.Notifica;
 import com.questtable.model.Prenotazione;
+import com.questtable.model.RegolaPuntiFedelta;
 import com.questtable.model.RuoloUtente;
 import com.questtable.model.SessioneTavolo;
+import com.questtable.model.StatoPrenotazione;
+import com.questtable.model.TipoNotifica;
 import com.questtable.model.Utente;
 import com.questtable.session.Session;
 import com.questtable.session.SessionManagerSingleton;
@@ -32,10 +38,12 @@ import java.util.List;
 public class QuestTableController {
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FORMATO_ORA = DateTimeFormatter.ofPattern("HH:mm");
+    private static final String USERNAME_GESTORE_NOTIFICHE = "admin";
 
     private final IUtenteDAO utenteDAO;
     private final ISessioneTavoloDAO sessioneTavoloDAO;
     private final IPrenotazioneDAO prenotazioneDAO;
+    private final INotificaDAO notificaDAO;
     private final SessionManagerSingleton sessionManager;
 
     public QuestTableController() {
@@ -43,6 +51,7 @@ public class QuestTableController {
         utenteDAO = daoFactory.fornisciUtenteDAO();
         sessioneTavoloDAO = daoFactory.fornisciSessioneTavoloDAO();
         prenotazioneDAO = daoFactory.fornisciPrenotazioneDAO();
+        notificaDAO = daoFactory.fornisciNotificaDAO();
         sessionManager = SessionManagerSingleton.fornisciIstanza();
     }
 
@@ -129,7 +138,7 @@ public class QuestTableController {
 
         int postiRichiesti = richiestaPreventivoBean.fornisciNumeroPostiRichiesti();
         float importoTotale = tavolo.calcolaImportoPer(postiRichiesti);
-        int puntiFedeltaPrevisti = tavolo.calcolaPuntiFedeltaPer(postiRichiesti);
+        int puntiFedeltaPrevisti = RegolaPuntiFedelta.calcolaPuntiPer(importoTotale);
 
         return new PreventivoBean(
                 tavolo.fornisciIdentificativo(),
@@ -178,6 +187,7 @@ public class QuestTableController {
         );
 
         prenotazioneDAO.salvaNuovaPrenotazione(prenotazione);
+        notificaGestorePrenotazioneInAttesa(prenotazione);
 
         return creaPrenotazioneBean(prenotazione);
     }
@@ -212,12 +222,33 @@ public class QuestTableController {
             throw new IllegalArgumentException("Prenotazione non trovata.");
         }
 
+        if (prenotazione.fornisciStatoCorrente() != StatoPrenotazione.IN_ATTESA) {
+            throw new IllegalStateException("La prenotazione non e' in attesa di conferma.");
+        }
+
         prenotazioneDAO.confermaPrenotazione(idPrenotazione);
-        prenotazione.accreditaPuntiFedeltaAlCliente();
+        prenotazione.assegnaPuntiFedeltaAlCliente();
         utenteDAO.aggiornaPuntiFedelta(
                 prenotazione.fornisciUsernameCliente(),
                 prenotazione.fornisciPuntiFedeltaCliente()
         );
+        notificaClientePrenotazioneConfermata(prenotazione);
+    }
+
+    public ListaNotificheBean consegnaNotificheNonLette(String idSessione) {
+        Session sessione = fornisciSessione(idSessione);
+
+        List<Notifica> notifiche = notificaDAO.recuperaNotificheNonLette(sessione.fornisciUsername());
+        List<String> messaggi = new ArrayList<>();
+        for (Notifica notifica : notifiche) {
+            messaggi.add(notifica.fornisciMessaggio());
+        }
+
+        if (!messaggi.isEmpty()) {
+            notificaDAO.segnaNotificheComeLette(sessione.fornisciUsername());
+        }
+
+        return new ListaNotificheBean(messaggi);
     }
 
     public void effettuaLogout(String idSessione) {
@@ -281,5 +312,27 @@ public class QuestTableController {
                 prenotazione.fornisciOraPrenotazione().format(FORMATO_ORA),
                 prenotazione.fornisciStatoCorrente()
         );
+    }
+
+    private void notificaGestorePrenotazioneInAttesa(Prenotazione prenotazione) {
+        notificaDAO.salvaNuovaNotifica(new Notifica(
+                USERNAME_GESTORE_NOTIFICHE,
+                TipoNotifica.RICHIESTA_PRENOTAZIONE,
+                "Nuova richiesta di prenotazione da "
+                        + prenotazione.fornisciUsernameCliente()
+                        + " per "
+                        + prenotazione.fornisciTitoloGiocoPrenotato()
+                        + "."
+        ));
+    }
+
+    private void notificaClientePrenotazioneConfermata(Prenotazione prenotazione) {
+        notificaDAO.salvaNuovaNotifica(new Notifica(
+                prenotazione.fornisciUsernameCliente(),
+                TipoNotifica.PRENOTAZIONE_CONFERMATA,
+                "La tua prenotazione per "
+                        + prenotazione.fornisciTitoloGiocoPrenotato()
+                        + " e' stata confermata."
+        ));
     }
 }

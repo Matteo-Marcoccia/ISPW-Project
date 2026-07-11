@@ -1,5 +1,6 @@
 package com.questtable.view.cli.controller;
 
+import com.questtable.bean.ListaNotificheBean;
 import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.controller.QuestTableController;
 import com.questtable.model.RuoloUtente;
@@ -155,6 +156,7 @@ public class SchermataHomeCliController {
         String nuovaSessione = loginCliController.effettuaLogin();
         if (nuovaSessione != null) {
             idSessione = nuovaSessione;
+            consegnaNotifiche();
         }
     }
 
@@ -197,5 +199,18 @@ public class SchermataHomeCliController {
 
     private void mostraSceltaNonValida() {
         InterazioneConsole.stampaSceltaNonValida();
+    }
+
+    private void consegnaNotifiche() {
+        ListaNotificheBean notifiche = questTableController.consegnaNotificheNonLette(idSessione);
+        if (notifiche.verificaAssenzaNotifiche()) {
+            return;
+        }
+
+        InterazioneConsole.stampaSeparatore();
+        InterazioneConsole.stampaMessaggio("Notifiche");
+        for (String messaggio : notifiche.fornisciMessaggi()) {
+            InterazioneConsole.stampaMessaggio("- " + messaggio);
+        }
     }
 }

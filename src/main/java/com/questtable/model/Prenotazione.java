@@ -97,11 +97,7 @@ public class Prenotazione {
         stato = StatoPrenotazione.CONFERMATA;
     }
 
-    public void accreditaPuntiFedeltaAlCliente() {
-        cliente.accreditaPuntiFedelta(calcolaPuntiFedeltaDaAccreditare());
-    }
-
-    public int calcolaPuntiFedeltaDaAccreditare() {
-        return Math.round(importoTotale * 10);
+    public void assegnaPuntiFedeltaAlCliente() {
+        cliente.riceviPuntiFedeltaDa(importoTotale);
     }
 }

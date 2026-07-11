@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MySQLUtenteDAO implements IUtenteDAO {
     private static final String QUERY_RECUPERA_UTENTE = """
@@ -22,15 +24,23 @@ public class MySQLUtenteDAO implements IUtenteDAO {
             WHERE username = ?
             """;
 
+    private final Map<String, Utente> utentiInMemoria = new HashMap<>();
+
     @Override
     public Utente recuperaUtente(String username) {
+        if (utentiInMemoria.containsKey(username)) {
+            return utentiInMemoria.get(username);
+        }
+
         try (Connection connessione = MySQLConnectionManager.apriConnessione();
              PreparedStatement statement = connessione.prepareStatement(QUERY_RECUPERA_UTENTE)) {
 
             statement.setString(1, username);
             try (ResultSet risultato = statement.executeQuery()) {
                 if (risultato.next()) {
-                    return creaUtenteDa(risultato);
+                    Utente utente = creaUtenteDa(risultato);
+                    utentiInMemoria.put(username, utente);
+                    return utente;
                 }
             }
 
@@ -48,6 +58,7 @@ public class MySQLUtenteDAO implements IUtenteDAO {
             statement.setInt(1, Math.max(0, puntiFedelta));
             statement.setString(2, username);
             statement.executeUpdate();
+            aggiornaUtenteInMemoria(username, puntiFedelta);
         } catch (SQLException exception) {
             throw new IllegalStateException("Impossibile aggiornare i punti fedelta dell'utente.", exception);
         }
@@ -63,5 +74,12 @@ public class MySQLUtenteDAO implements IUtenteDAO {
         }
 
         return new Utente(username, parolaAccesso, ruolo);
+    }
+
+    private void aggiornaUtenteInMemoria(String username, int puntiFedelta) {
+        Utente utente = utentiInMemoria.get(username);
+        if (utente instanceof Cliente cliente) {
+            cliente.aggiornaPuntiFedelta(puntiFedelta);
+        }
     }
 }

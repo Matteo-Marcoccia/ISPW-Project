@@ -33,8 +33,7 @@ public class SessionManagerSingleton {
         String idSessione = UUID.randomUUID().toString();
         Session session = new Session(
                 idSessione,
-                utente.fornisciUsername(),
-                utente.fornisciRuolo()
+                utente
         );
 
         sessioniAttive.put(idSessione, session);

@@ -16,7 +16,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
     private static final String SEPARATORE_CAMPI = ";";
@@ -34,6 +38,9 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
 
     private final IUtenteDAO utenteDAO;
     private final ISessioneTavoloDAO sessioneTavoloDAO;
+    private final Map<Integer, Prenotazione> prenotazioniInMemoria = new LinkedHashMap<>();
+    private final Set<String> storiciClienteCaricati = new HashSet<>();
+    private boolean prenotazioniInAttesaCaricate;
 
     public FileSystemPrenotazioneDAO(IUtenteDAO utenteDAO, ISessioneTavoloDAO sessioneTavoloDAO) {
         this.utenteDAO = utenteDAO;
@@ -47,16 +54,23 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
         List<String> righePrenotazioni = new ArrayList<>(leggiRighePrenotazioni());
         righePrenotazioni.add(creaRigaDa(prenotazione));
         salvaRighePrenotazioni(righePrenotazioni);
+        prenotazioniInMemoria.put(prenotazione.fornisciIdentificativo(), prenotazione);
     }
 
     @Override
     public Prenotazione recuperaPrenotazione(int idPrenotazione) {
+        if (prenotazioniInMemoria.containsKey(idPrenotazione)) {
+            return prenotazioniInMemoria.get(idPrenotazione);
+        }
+
         inizializzaArchivioSeNecessario();
 
         for (String rigaPrenotazione : leggiRighePrenotazioni()) {
             String[] campiPrenotazione = dividiCampiPrenotazione(rigaPrenotazione);
             if (verificaRigaPrenotazioneCercata(campiPrenotazione, idPrenotazione)) {
-                return creaPrenotazioneDa(campiPrenotazione);
+                Prenotazione prenotazione = creaPrenotazioneDa(campiPrenotazione);
+                prenotazioniInMemoria.put(idPrenotazione, prenotazione);
+                return prenotazione;
             }
         }
 
@@ -65,14 +79,25 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
 
     @Override
     public List<Prenotazione> recuperaPrenotazioniCliente(String usernameCliente) {
-        inizializzaArchivioSeNecessario();
+        if (!storiciClienteCaricati.contains(usernameCliente)) {
+            inizializzaArchivioSeNecessario();
+
+            for (String rigaPrenotazione : leggiRighePrenotazioni()) {
+                String[] campiPrenotazione = dividiCampiPrenotazione(rigaPrenotazione);
+                if (verificaRigaPrenotazioneValida(campiPrenotazione)
+                        && campiPrenotazione[INDICE_USERNAME_CLIENTE].equals(usernameCliente)) {
+                    Prenotazione prenotazione = creaPrenotazioneDa(campiPrenotazione);
+                    prenotazioniInMemoria.put(prenotazione.fornisciIdentificativo(), prenotazione);
+                }
+            }
+
+            storiciClienteCaricati.add(usernameCliente);
+        }
 
         List<Prenotazione> prenotazioniCliente = new ArrayList<>();
-        for (String rigaPrenotazione : leggiRighePrenotazioni()) {
-            String[] campiPrenotazione = dividiCampiPrenotazione(rigaPrenotazione);
-            if (verificaRigaPrenotazioneValida(campiPrenotazione)
-                    && campiPrenotazione[INDICE_USERNAME_CLIENTE].equals(usernameCliente)) {
-                prenotazioniCliente.add(creaPrenotazioneDa(campiPrenotazione));
+        for (Prenotazione prenotazione : prenotazioniInMemoria.values()) {
+            if (prenotazione.fornisciUsernameCliente().equals(usernameCliente)) {
+                prenotazioniCliente.add(prenotazione);
             }
         }
 
@@ -81,14 +106,25 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
 
     @Override
     public List<Prenotazione> recuperaPrenotazioniInAttesa() {
-        inizializzaArchivioSeNecessario();
+        if (!prenotazioniInAttesaCaricate) {
+            inizializzaArchivioSeNecessario();
+
+            for (String rigaPrenotazione : leggiRighePrenotazioni()) {
+                String[] campiPrenotazione = dividiCampiPrenotazione(rigaPrenotazione);
+                if (verificaRigaPrenotazioneValida(campiPrenotazione)
+                        && StatoPrenotazione.IN_ATTESA.name().equals(campiPrenotazione[INDICE_STATO])) {
+                    Prenotazione prenotazione = creaPrenotazioneDa(campiPrenotazione);
+                    prenotazioniInMemoria.put(prenotazione.fornisciIdentificativo(), prenotazione);
+                }
+            }
+
+            prenotazioniInAttesaCaricate = true;
+        }
 
         List<Prenotazione> prenotazioniInAttesa = new ArrayList<>();
-        for (String rigaPrenotazione : leggiRighePrenotazioni()) {
-            String[] campiPrenotazione = dividiCampiPrenotazione(rigaPrenotazione);
-            if (verificaRigaPrenotazioneValida(campiPrenotazione)
-                    && StatoPrenotazione.IN_ATTESA.name().equals(campiPrenotazione[INDICE_STATO])) {
-                prenotazioniInAttesa.add(creaPrenotazioneDa(campiPrenotazione));
+        for (Prenotazione prenotazione : prenotazioniInMemoria.values()) {
+            if (prenotazione.fornisciStatoCorrente() == StatoPrenotazione.IN_ATTESA) {
+                prenotazioniInAttesa.add(prenotazione);
             }
         }
 
@@ -111,6 +147,7 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
         }
 
         salvaRighePrenotazioni(righeAggiornate);
+        confermaPrenotazioneInMemoria(idPrenotazione);
     }
 
     private Prenotazione creaPrenotazioneDa(String[] campiPrenotazione) {
@@ -144,6 +181,13 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
         }
 
         return null;
+    }
+
+    private void confermaPrenotazioneInMemoria(int idPrenotazione) {
+        Prenotazione prenotazione = prenotazioniInMemoria.get(idPrenotazione);
+        if (prenotazione != null) {
+            prenotazione.confermaPrenotazione();
+        }
     }
 
     private String creaRigaDa(Prenotazione prenotazione) {
