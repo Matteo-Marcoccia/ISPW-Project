@@ -23,12 +23,14 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
 
 public class ListaTavoliController {
+    private static final String FONT_PRINCIPALE = "Segoe UI";
     private static final String STILE_TESTO_DETTAGLIO_CARD = "-fx-text-fill: #4A4A4A;";
 
     private final QuestTableController questTableController = new QuestTableController();
@@ -134,20 +136,23 @@ public class ListaTavoliController {
         StackPane boxImmagine = creaBoxImmagine(tavolo);
 
         Label lblTitolo = new Label(tavolo.fornisciTitoloGioco());
-        lblTitolo.setFont(Font.font("Segoe UI", 18));
-        lblTitolo.setStyle("-fx-font-weight: bold; -fx-text-fill: #1A1A1A;");
+        lblTitolo.setFont(Font.font(FONT_PRINCIPALE, FontWeight.BOLD, 18));
+        lblTitolo.setStyle("-fx-text-fill: #1A1A1A;");
         lblTitolo.setWrapText(true);
 
         Label lblGiorno = new Label(tavolo.fornisciGiornoSettimana().fornisciNomeVisualizzato()
                 + " | " + tavolo.fornisciFasciaOraria());
+        lblGiorno.setFont(Font.font(FONT_PRINCIPALE, 13));
         lblGiorno.setStyle(STILE_TESTO_DETTAGLIO_CARD);
 
         Label lblPosti = new Label("Posti disponibili: "
                 + tavolo.fornisciNumeroPostiDisponibili()
                 + "/" + tavolo.fornisciNumeroPostiTotali());
+        lblPosti.setFont(Font.font(FONT_PRINCIPALE, 13));
         lblPosti.setStyle(STILE_TESTO_DETTAGLIO_CARD);
 
         Label lblQuota = new Label(FormattatoreImporti.formattaQuotaAPersona(tavolo.fornisciQuotaPartecipazione()));
+        lblQuota.setFont(Font.font(FONT_PRINCIPALE, 13));
         lblQuota.setStyle(STILE_TESTO_DETTAGLIO_CARD);
 
         Button btnSeleziona = new Button("Seleziona");
@@ -178,6 +183,7 @@ public class ListaTavoliController {
         URL urlImmagine = getClass().getResource(tavolo.fornisciPercorsoImmagine());
         if (urlImmagine == null) {
             Label lblImmagineNonDisponibile = new Label("Immagine non disponibile");
+            lblImmagineNonDisponibile.setFont(Font.font(FONT_PRINCIPALE, 11));
             lblImmagineNonDisponibile.setStyle("-fx-text-fill: #777777; -fx-font-size: 11px;");
             boxImmagine.getChildren().add(lblImmagineNonDisponibile);
             return boxImmagine;
@@ -195,7 +201,8 @@ public class ListaTavoliController {
 
     private Label creaMessaggioListaVuota() {
         Label label = new Label("Non ci sono tavoli disponibili.");
-        label.setStyle("-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;");
+        label.setFont(Font.font(FONT_PRINCIPALE, FontWeight.BOLD, 15));
+        label.setStyle("-fx-text-fill: white;");
         return label;
     }
 

@@ -14,11 +14,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.io.IOException;
 import java.util.StringJoiner;
 
 public class SchermataHomeController {
+    private static final String FONT_PRINCIPALE = "Segoe UI";
+
     private final QuestTableController questTableController = new QuestTableController();
 
     private String idSessione;
@@ -186,7 +190,8 @@ public class SchermataHomeController {
     private HBox creaContenutoProfiloCliente(ProfiloUtenteBean profiloUtente) {
         Label username = creaEtichettaProfilo(profiloUtente.fornisciUsername() + "  |");
         Label stella = new Label("★");
-        stella.setStyle("-fx-text-fill: #FFD43B; -fx-font-size: 18px; -fx-font-weight: bold;");
+        stella.setFont(Font.font(FONT_PRINCIPALE, FontWeight.BOLD, 18));
+        stella.setStyle("-fx-text-fill: #FFD43B;");
         Label punti = creaEtichettaProfilo(profiloUtente.fornisciPuntiFedelta() + " punti");
 
         HBox contenutoProfilo = new HBox(6, username, stella, punti);
@@ -196,7 +201,8 @@ public class SchermataHomeController {
 
     private Label creaEtichettaProfilo(String testo) {
         Label etichetta = new Label(testo);
-        etichetta.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+        etichetta.setFont(Font.font(FONT_PRINCIPALE, FontWeight.BOLD, 13));
+        etichetta.setStyle("-fx-text-fill: white;");
         return etichetta;
     }
 

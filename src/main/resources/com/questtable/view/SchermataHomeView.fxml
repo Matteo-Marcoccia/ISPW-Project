@@ -76,7 +76,7 @@
                                     </VBox.margin>
                                 </StackPane>
 
-                                <Label text="Prenota un Tavolo" textFill="#1A1A1A">
+                                <Label text="Prenota un Posto" textFill="#1A1A1A">
                                     <font>
                                         <Font name="System Bold" size="20.0" />
                                     </font>
