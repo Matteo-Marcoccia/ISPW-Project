@@ -3,19 +3,19 @@ package com.questtable.view.cli.controller;
 import com.questtable.bean.InfoTavoloBean;
 import com.questtable.bean.PreventivoBean;
 import com.questtable.bean.RichiestaPreventivoBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.view.FormattatoreImporti;
 
 import java.util.Scanner;
 
 public class DettagliTavoloCliController {
-    private final QuestTableController questTableController;
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo;
     private final Scanner scanner;
     private final String idSessione;
 
-    public DettagliTavoloCliController(QuestTableController questTableController, Scanner scanner,
+    public DettagliTavoloCliController(PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo, Scanner scanner,
                                        String idSessione) {
-        this.questTableController = questTableController;
+        this.prenotaPostoControllerApplicativo = prenotaPostoControllerApplicativo;
         this.scanner = scanner;
         this.idSessione = idSessione;
     }
@@ -34,14 +34,14 @@ public class DettagliTavoloCliController {
                     return false;
                 }
 
-                PreventivoBean preventivoBean = questTableController.calcolaPreventivo(
+                PreventivoBean preventivoBean = prenotaPostoControllerApplicativo.calcolaPreventivo(
                         new RichiestaPreventivoBean(
                                 tavoloSelezionato.fornisciIdentificativoTavolo(),
                                 postiRichiesti
                         )
                 );
                 PagamentoCliController pagamentoCliController =
-                        new PagamentoCliController(questTableController, scanner, idSessione, preventivoBean);
+                        new PagamentoCliController(prenotaPostoControllerApplicativo, scanner, idSessione, preventivoBean);
                 dettagliAttivi = !pagamentoCliController.apri();
             }
             return true;
@@ -76,3 +76,4 @@ public class DettagliTavoloCliController {
     }
 
 }
+

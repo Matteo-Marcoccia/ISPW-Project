@@ -2,7 +2,7 @@ package com.questtable.view.javafx.controller;
 
 import com.questtable.bean.ListaPrenotazioniBean;
 import com.questtable.bean.PrenotazioneBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.view.FormattatoreImporti;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 
 public class ConfermaPrenotazioniController {
-    private final QuestTableController questTableController = new QuestTableController();
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo = new PrenotaPostoControllerApplicativo();
 
     private String idSessione;
 
@@ -49,7 +49,7 @@ public class ConfermaPrenotazioniController {
 
         try {
             ListaPrenotazioniBean listaPrenotazioniBean =
-                    questTableController.fornisciPrenotazioniInAttesa(idSessione);
+                    prenotaPostoControllerApplicativo.fornisciPrenotazioniInAttesa(idSessione);
 
             if (listaPrenotazioniBean.verificaAssenzaPrenotazioni()) {
                 containerPrenotazioni.getChildren().add(creaMessaggioListaVuota());
@@ -117,7 +117,7 @@ public class ConfermaPrenotazioniController {
 
     private void confermaPrenotazione(PrenotazioneBean prenotazione) {
         try {
-            questTableController.confermaPrenotazione(
+            prenotaPostoControllerApplicativo.confermaPrenotazione(
                     idSessione,
                     prenotazione.fornisciIdentificativoPrenotazione()
             );
@@ -134,4 +134,5 @@ public class ConfermaPrenotazioniController {
         MessaggiGrafici.mostraErrore("Impossibile confermare la prenotazione", messaggio);
     }
 }
+
 

@@ -2,7 +2,7 @@ package com.questtable.view.javafx.controller;
 
 import com.questtable.bean.ListaPrenotazioniBean;
 import com.questtable.bean.PrenotazioneBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.model.StatoPrenotazione;
 import com.questtable.view.FormattatoreImporti;
 import javafx.event.ActionEvent;
@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 
 public class StoricoPrenotazioniController {
-    private final QuestTableController questTableController = new QuestTableController();
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo = new PrenotaPostoControllerApplicativo();
 
     private String idSessione;
 
@@ -46,7 +46,7 @@ public class StoricoPrenotazioniController {
 
         try {
             ListaPrenotazioniBean listaPrenotazioniBean =
-                    questTableController.fornisciPrenotazioniCliente(idSessione);
+                    prenotaPostoControllerApplicativo.fornisciPrenotazioniCliente(idSessione);
 
             if (listaPrenotazioniBean.verificaAssenzaPrenotazioni()) {
                 containerPrenotazioni.getChildren().add(creaMessaggioListaVuota());
@@ -117,3 +117,4 @@ public class StoricoPrenotazioniController {
         return "#B24A3B";
     }
 }
+

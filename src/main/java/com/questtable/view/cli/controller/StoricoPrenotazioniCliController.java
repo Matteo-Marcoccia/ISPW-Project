@@ -2,18 +2,18 @@ package com.questtable.view.cli.controller;
 
 import com.questtable.bean.ListaPrenotazioniBean;
 import com.questtable.bean.PrenotazioneBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 
 import java.util.Scanner;
 
 public class StoricoPrenotazioniCliController {
-    private final QuestTableController questTableController;
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo;
     private final Scanner scanner;
     private final String idSessione;
 
-    public StoricoPrenotazioniCliController(QuestTableController questTableController, Scanner scanner,
+    public StoricoPrenotazioniCliController(PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo, Scanner scanner,
                                             String idSessione) {
-        this.questTableController = questTableController;
+        this.prenotaPostoControllerApplicativo = prenotaPostoControllerApplicativo;
         this.scanner = scanner;
         this.idSessione = idSessione;
     }
@@ -21,7 +21,7 @@ public class StoricoPrenotazioniCliController {
     public void apri() {
         try {
             ListaPrenotazioniBean listaPrenotazioniBean =
-                    questTableController.fornisciPrenotazioniCliente(idSessione);
+                    prenotaPostoControllerApplicativo.fornisciPrenotazioniCliente(idSessione);
 
             InterazioneConsole.stampaSeparatore();
             InterazioneConsole.stampaMessaggio("Storico prenotazioni");
@@ -46,3 +46,4 @@ public class StoricoPrenotazioniCliController {
         InterazioneConsole.leggiTesto(scanner, "Premi invio per tornare alla home.");
     }
 }
+

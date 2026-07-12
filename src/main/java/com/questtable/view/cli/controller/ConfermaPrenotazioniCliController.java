@@ -2,19 +2,19 @@ package com.questtable.view.cli.controller;
 
 import com.questtable.bean.ListaPrenotazioniBean;
 import com.questtable.bean.PrenotazioneBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class ConfermaPrenotazioniCliController {
-    private final QuestTableController questTableController;
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo;
     private final Scanner scanner;
     private final String idSessione;
 
-    public ConfermaPrenotazioniCliController(QuestTableController questTableController, Scanner scanner,
+    public ConfermaPrenotazioniCliController(PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo, Scanner scanner,
                                              String idSessione) {
-        this.questTableController = questTableController;
+        this.prenotaPostoControllerApplicativo = prenotaPostoControllerApplicativo;
         this.scanner = scanner;
         this.idSessione = idSessione;
     }
@@ -30,7 +30,7 @@ public class ConfermaPrenotazioniCliController {
     private boolean mostraPrenotazioniEConferma() {
         try {
             ListaPrenotazioniBean listaPrenotazioniBean =
-                    questTableController.fornisciPrenotazioniInAttesa(idSessione);
+                    prenotaPostoControllerApplicativo.fornisciPrenotazioniInAttesa(idSessione);
 
             InterazioneConsole.stampaSeparatore();
             InterazioneConsole.stampaMessaggio("Prenotazioni in attesa");
@@ -70,7 +70,7 @@ public class ConfermaPrenotazioniCliController {
     }
 
     private void confermaPrenotazione(PrenotazioneBean prenotazione) {
-        questTableController.confermaPrenotazione(
+        prenotaPostoControllerApplicativo.confermaPrenotazione(
                 idSessione,
                 prenotazione.fornisciIdentificativoPrenotazione()
         );
@@ -79,3 +79,4 @@ public class ConfermaPrenotazioniCliController {
                 + " confermata con successo.");
     }
 }
+

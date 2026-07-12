@@ -2,7 +2,7 @@ package com.questtable.view.cli.controller;
 
 import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.controller.LoginControllerApplicativo;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.model.RuoloUtente;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class SchermataHomeCliController {
     private static final String TITOLO_APPLICAZIONE = "QuestTable";
     private static final String VOCE_ESCI = "0. Esci";
 
-    private final QuestTableController questTableController = new QuestTableController();
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo = new PrenotaPostoControllerApplicativo();
     private final LoginControllerApplicativo loginControllerApplicativo = new LoginControllerApplicativo();
     private final Scanner scanner;
 
@@ -165,19 +165,19 @@ public class SchermataHomeCliController {
 
     private void apriListaTavoli() {
         ListaTavoliCliController listaTavoliCliController =
-                new ListaTavoliCliController(questTableController, scanner, idSessione);
+                new ListaTavoliCliController(prenotaPostoControllerApplicativo, scanner, idSessione);
         listaTavoliCliController.apri();
     }
 
     private void apriStoricoPrenotazioni() {
         StoricoPrenotazioniCliController storicoPrenotazioniCliController =
-                new StoricoPrenotazioniCliController(questTableController, scanner, idSessione);
+                new StoricoPrenotazioniCliController(prenotaPostoControllerApplicativo, scanner, idSessione);
         storicoPrenotazioniCliController.apri();
     }
 
     private void apriConfermaPrenotazioni() {
         ConfermaPrenotazioniCliController confermaPrenotazioniCliController =
-                new ConfermaPrenotazioniCliController(questTableController, scanner, idSessione);
+                new ConfermaPrenotazioniCliController(prenotaPostoControllerApplicativo, scanner, idSessione);
         confermaPrenotazioniCliController.apri();
     }
 
@@ -207,7 +207,7 @@ public class SchermataHomeCliController {
     private void mostraAvvisoPrenotazioniInAttesa() {
         ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
         if (!profiloUtente.verificaRuolo(RuoloUtente.GESTORE)
-                || !questTableController.verificaPrenotazioniInAttesa(idSessione)) {
+                || !prenotaPostoControllerApplicativo.verificaPrenotazioniInAttesa(idSessione)) {
             return;
         }
 
@@ -221,7 +221,7 @@ public class SchermataHomeCliController {
             return;
         }
 
-        List<String> comunicazioni = questTableController.prelevaComunicazioniCliente(idSessione);
+        List<String> comunicazioni = prenotaPostoControllerApplicativo.prelevaComunicazioniCliente(idSessione);
         if (comunicazioni.isEmpty()) {
             return;
         }
@@ -232,3 +232,4 @@ public class SchermataHomeCliController {
         }
     }
 }
+

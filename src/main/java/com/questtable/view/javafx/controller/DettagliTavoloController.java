@@ -3,7 +3,7 @@ package com.questtable.view.javafx.controller;
 import com.questtable.bean.InfoTavoloBean;
 import com.questtable.bean.PreventivoBean;
 import com.questtable.bean.RichiestaPreventivoBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.model.RegolaPuntiFedelta;
 import com.questtable.view.FormattatoreImporti;
 import javafx.event.ActionEvent;
@@ -21,7 +21,7 @@ import java.net.URL;
 public class DettagliTavoloController {
     private static final String STILE_TESTO_RIEPILOGO = "-fx-text-fill: #1A1A1A; -fx-font-weight: bold;";
 
-    private final QuestTableController questTableController = new QuestTableController();
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo = new PrenotaPostoControllerApplicativo();
 
     private String idSessione;
     private InfoTavoloBean tavoloSelezionato;
@@ -111,7 +111,7 @@ public class DettagliTavoloController {
                     tavoloSelezionato.fornisciIdentificativoTavolo(),
                     numeroPartecipanti
             );
-            PreventivoBean preventivoBean = questTableController.calcolaPreventivo(richiestaPreventivoBean);
+            PreventivoBean preventivoBean = prenotaPostoControllerApplicativo.calcolaPreventivo(richiestaPreventivoBean);
             apriPagamento(event, preventivoBean);
         } catch (IllegalArgumentException | IllegalStateException exception) {
             mostraErrore(exception.getMessage());
@@ -188,4 +188,5 @@ public class DettagliTavoloController {
         MessaggiGrafici.mostraErrore("Impossibile calcolare il preventivo", messaggio);
     }
 }
+
 

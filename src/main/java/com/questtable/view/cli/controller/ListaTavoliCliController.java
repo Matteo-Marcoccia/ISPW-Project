@@ -3,7 +3,7 @@ package com.questtable.view.cli.controller;
 import com.questtable.bean.InfoTavoloBean;
 import com.questtable.bean.ListaTavoliBean;
 import com.questtable.bean.RicercaTavoliBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.view.FormattatoreImporti;
 
@@ -15,12 +15,12 @@ public class ListaTavoliCliController {
     private static final int SCELTA_FILTRA_TAVOLI = 8;
     private static final int SCELTA_PULISCI_FILTRI = 9;
 
-    private final QuestTableController questTableController;
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo;
     private final Scanner scanner;
     private final String idSessione;
 
-    public ListaTavoliCliController(QuestTableController questTableController, Scanner scanner, String idSessione) {
-        this.questTableController = questTableController;
+    public ListaTavoliCliController(PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo, Scanner scanner, String idSessione) {
+        this.prenotaPostoControllerApplicativo = prenotaPostoControllerApplicativo;
         this.scanner = scanner;
         this.idSessione = idSessione;
     }
@@ -31,7 +31,7 @@ public class ListaTavoliCliController {
             boolean listaAttiva = true;
             while (listaAttiva) {
                 ListaTavoliBean listaTavoliBean =
-                        questTableController.fornisciTavoliDisponibili(idSessione, ricercaTavoliBean);
+                        prenotaPostoControllerApplicativo.fornisciTavoliDisponibili(idSessione, ricercaTavoliBean);
 
                 mostraTavoliDisponibili(listaTavoliBean.fornisciTavoli(), ricercaTavoliBean);
                 int scelta = InterazioneConsole.leggiIntero(scanner, "Seleziona tavolo o comando: ");
@@ -65,7 +65,7 @@ public class ListaTavoliCliController {
         }
 
         DettagliTavoloCliController dettagliTavoloCliController =
-                new DettagliTavoloCliController(questTableController, scanner, idSessione);
+                new DettagliTavoloCliController(prenotaPostoControllerApplicativo, scanner, idSessione);
         return !dettagliTavoloCliController.apri(tavoloSelezionato);
     }
 
@@ -158,3 +158,4 @@ public class ListaTavoliCliController {
     }
 
 }
+

@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class QuestTableControllerTest {
+class PrenotaPostoControllerApplicativoTest {
     private static final String USERNAME_CLIENTE = "matteo";
     private static final String CREDENZIALE_CLIENTE = "1234";
     private static final String USERNAME_GESTORE = "admin";
@@ -29,7 +29,7 @@ class QuestTableControllerTest {
 
     @Test
     void ricercaTavoliFiltraPerGiocoEGiorno() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         String idSessione = apriSessioneCliente();
 
         ListaTavoliBean listaTavoliBean = controller.fornisciTavoliDisponibili(
@@ -43,7 +43,7 @@ class QuestTableControllerTest {
 
     @Test
     void calcolaPreventivoPerTavoloDisponibile() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         RichiestaPreventivoBean richiestaPreventivoBean = new RichiestaPreventivoBean(1, 2);
 
         PreventivoBean preventivoBean = controller.calcolaPreventivo(richiestaPreventivoBean);
@@ -56,7 +56,7 @@ class QuestTableControllerTest {
 
     @Test
     void calcolaPreventivoRifiutaRichiestaNonValida() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         RichiestaPreventivoBean richiestaPreventivoBean = new RichiestaPreventivoBean(1, 0);
 
         IllegalArgumentException exception = assertThrows(
@@ -69,7 +69,7 @@ class QuestTableControllerTest {
 
     @Test
     void calcolaPreventivoRifiutaTavoloAssente() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         RichiestaPreventivoBean richiestaPreventivoBean = new RichiestaPreventivoBean(99, 1);
 
         IllegalArgumentException exception = assertThrows(
@@ -82,7 +82,7 @@ class QuestTableControllerTest {
 
     @Test
     void calcolaPreventivoRifiutaPostiNonDisponibili() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         RichiestaPreventivoBean richiestaPreventivoBean = new RichiestaPreventivoBean(1, 99);
 
         PostiNonDisponibiliException exception = assertThrows(
@@ -95,7 +95,7 @@ class QuestTableControllerTest {
 
     @Test
     void registraPrenotazioneDopoPagamentoValido() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         String idSessione = apriSessioneCliente();
         PagamentoBean pagamentoBean = new PagamentoBean(2, 1, 12.0f, MetodoPagamento.CARTA_CREDITO, true);
 
@@ -108,7 +108,7 @@ class QuestTableControllerTest {
 
     @Test
     void registraPrenotazioneRifiutaPagamentoNonValido() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         String idSessione = apriSessioneCliente();
         PagamentoBean pagamentoBean = new PagamentoBean(2, 1, 12.0f, MetodoPagamento.CARTA_CREDITO, false);
 
@@ -123,7 +123,7 @@ class QuestTableControllerTest {
 
     @Test
     void gestoreRecuperaPrenotazioniInAttesa() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         String idSessioneGestore = apriSessioneGestore();
 
         ListaPrenotazioniBean listaPrenotazioniBean = controller.fornisciPrenotazioniInAttesa(idSessioneGestore);
@@ -133,7 +133,7 @@ class QuestTableControllerTest {
 
     @Test
     void clienteRecuperaStoricoPrenotazioni() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         String idSessione = apriSessioneCliente();
 
         ListaPrenotazioniBean listaPrenotazioniBean = controller.fornisciPrenotazioniCliente(idSessione);
@@ -143,7 +143,7 @@ class QuestTableControllerTest {
 
     @Test
     void gestoreConfermaPrenotazione() {
-        QuestTableController controller = new QuestTableController();
+        PrenotaPostoControllerApplicativo controller = new PrenotaPostoControllerApplicativo();
         String idSessioneGestore = apriSessioneGestore();
 
         controller.confermaPrenotazione(idSessioneGestore, 1);
@@ -162,3 +162,4 @@ class QuestTableControllerTest {
         return new LoginControllerApplicativo().effettuaLogin(new LoginBean(USERNAME_GESTORE, CREDENZIALE_GESTORE));
     }
 }
+

@@ -3,7 +3,7 @@ package com.questtable.view.javafx.controller;
 import com.questtable.bean.InfoTavoloBean;
 import com.questtable.bean.ListaTavoliBean;
 import com.questtable.bean.RicercaTavoliBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.view.FormattatoreImporti;
 import javafx.collections.FXCollections;
@@ -33,7 +33,7 @@ public class ListaTavoliController {
     private static final String FONT_PRINCIPALE = "Segoe UI";
     private static final String STILE_TESTO_DETTAGLIO_CARD = "-fx-text-fill: #4A4A4A;";
 
-    private final QuestTableController questTableController = new QuestTableController();
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo = new PrenotaPostoControllerApplicativo();
 
     private String idSessione;
 
@@ -115,7 +115,7 @@ public class ListaTavoliController {
         containerTavoli.getChildren().clear();
 
         try {
-            ListaTavoliBean listaTavoliBean = questTableController.fornisciTavoliDisponibili(
+            ListaTavoliBean listaTavoliBean = prenotaPostoControllerApplicativo.fornisciTavoliDisponibili(
                     idSessione,
                     ricercaTavoliBean
             );
@@ -224,4 +224,5 @@ public class ListaTavoliController {
         MessaggiGrafici.mostraErrore("Impossibile caricare i tavoli", messaggio);
     }
 }
+
 

@@ -3,21 +3,21 @@ package com.questtable.view.cli.controller;
 import com.questtable.bean.PagamentoBean;
 import com.questtable.bean.PrenotazioneBean;
 import com.questtable.bean.PreventivoBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.model.MetodoPagamento;
 import com.questtable.view.FormattatoreImporti;
 
 import java.util.Scanner;
 
 public class PagamentoCliController {
-    private final QuestTableController questTableController;
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo;
     private final Scanner scanner;
     private final String idSessione;
     private final PreventivoBean preventivoBean;
 
-    public PagamentoCliController(QuestTableController questTableController, Scanner scanner,
+    public PagamentoCliController(PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo, Scanner scanner,
                                   String idSessione, PreventivoBean preventivoBean) {
-        this.questTableController = questTableController;
+        this.prenotaPostoControllerApplicativo = prenotaPostoControllerApplicativo;
         this.scanner = scanner;
         this.idSessione = idSessione;
         this.preventivoBean = preventivoBean;
@@ -40,7 +40,7 @@ public class PagamentoCliController {
         }
 
         try {
-            PrenotazioneBean prenotazioneBean = questTableController.registraPrenotazione(
+            PrenotazioneBean prenotazioneBean = prenotaPostoControllerApplicativo.registraPrenotazione(
                     idSessione,
                     creaPagamentoBean(metodoPagamento)
             );
@@ -130,3 +130,4 @@ public class PagamentoCliController {
         );
     }
 }
+

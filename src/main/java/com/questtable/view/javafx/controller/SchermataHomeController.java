@@ -2,7 +2,7 @@ package com.questtable.view.javafx.controller;
 
 import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.controller.LoginControllerApplicativo;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.model.RuoloUtente;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -23,7 +23,7 @@ import java.util.List;
 public class SchermataHomeController {
     private static final String FONT_PRINCIPALE = "Segoe UI";
 
-    private final QuestTableController questTableController = new QuestTableController();
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo = new PrenotaPostoControllerApplicativo();
     private final LoginControllerApplicativo loginControllerApplicativo = new LoginControllerApplicativo();
 
     private String idSessione;
@@ -197,7 +197,7 @@ public class SchermataHomeController {
 
     private HBox creaContenutoProfiloCliente(ProfiloUtenteBean profiloUtente) {
         Label username = creaEtichettaProfilo(profiloUtente.fornisciUsername() + "  |");
-        Label stella = new Label("★");
+        Label stella = new Label("â˜…");
         stella.setFont(Font.font(FONT_PRINCIPALE, FontWeight.BOLD, 18));
         stella.setStyle("-fx-text-fill: #FFD43B;");
         Label punti = creaEtichettaProfilo(profiloUtente.fornisciPuntiFedelta() + " punti");
@@ -215,7 +215,7 @@ public class SchermataHomeController {
     }
 
     private void mostraAvvisoPrenotazioniInAttesa() {
-        if (questTableController.verificaPrenotazioniInAttesa(idSessione)) {
+        if (prenotaPostoControllerApplicativo.verificaPrenotazioniInAttesa(idSessione)) {
             MessaggiGrafici.mostraAvvisoPrenotazioniInAttesa();
         }
     }
@@ -225,7 +225,7 @@ public class SchermataHomeController {
     }
 
     private void mostraComunicazioniCliente() {
-        List<String> comunicazioni = questTableController.prelevaComunicazioniCliente(idSessione);
+        List<String> comunicazioni = prenotaPostoControllerApplicativo.prelevaComunicazioniCliente(idSessione);
         if (comunicazioni.isEmpty()) {
             return;
         }
@@ -237,3 +237,4 @@ public class SchermataHomeController {
         Platform.runLater(this::mostraComunicazioniCliente);
     }
 }
+

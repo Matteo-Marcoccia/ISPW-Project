@@ -33,7 +33,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestTableController {
+public class PrenotaPostoControllerApplicativo {
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FORMATO_ORA = DateTimeFormatter.ofPattern("HH:mm");
     private static final String DESTINATARIO_GESTORE = "gestore";
@@ -44,7 +44,7 @@ public class QuestTableController {
     private final ServizioNotifichePrenotazione servizioNotifichePrenotazione;
     private final SessionManagerSingleton sessionManager;
 
-    public QuestTableController() {
+    public PrenotaPostoControllerApplicativo() {
         DAOFactory daoFactory = DAOFactory.fornisciDAOFactory();
         utenteDAO = daoFactory.fornisciUtenteDAO();
         sessioneTavoloDAO = daoFactory.fornisciSessioneTavoloDAO();
@@ -279,3 +279,4 @@ public class QuestTableController {
         ));
     }
 }
+

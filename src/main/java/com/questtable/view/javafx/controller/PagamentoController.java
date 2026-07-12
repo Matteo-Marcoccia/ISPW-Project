@@ -4,7 +4,7 @@ import com.questtable.bean.InfoTavoloBean;
 import com.questtable.bean.PagamentoBean;
 import com.questtable.bean.PrenotazioneBean;
 import com.questtable.bean.PreventivoBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.PrenotaPostoControllerApplicativo;
 import com.questtable.model.MetodoPagamento;
 import com.questtable.view.FormattatoreImporti;
 import javafx.collections.FXCollections;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class PagamentoController {
     private static final String TESTO_CONFERMA_PAGAMENTO = "paga";
 
-    private final QuestTableController questTableController = new QuestTableController();
+    private final PrenotaPostoControllerApplicativo prenotaPostoControllerApplicativo = new PrenotaPostoControllerApplicativo();
 
     private String idSessione;
     private PreventivoBean preventivoBean;
@@ -105,7 +105,7 @@ public class PagamentoController {
                     true
             );
 
-            PrenotazioneBean prenotazioneBean = questTableController.registraPrenotazione(idSessione, pagamentoBean);
+            PrenotazioneBean prenotazioneBean = prenotaPostoControllerApplicativo.registraPrenotazione(idSessione, pagamentoBean);
             apriRichiestaPrenotazioneOk(event, prenotazioneBean);
         } catch (IllegalArgumentException | IllegalStateException exception) {
             lblMessaggioPagamento.setText(exception.getMessage());
@@ -156,4 +156,5 @@ public class PagamentoController {
         }
     }
 }
+
 
