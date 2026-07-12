@@ -28,7 +28,6 @@ public class PagamentoCliController {
             return false;
         }
 
-        mostraPreventivo();
         MetodoPagamento metodoPagamento = selezionaMetodoPagamento();
         if (metodoPagamento == null) {
             return false;
@@ -54,14 +53,6 @@ public class PagamentoCliController {
         }
     }
 
-    private void mostraPreventivo() {
-        InterazioneConsole.stampaSeparatore();
-        InterazioneConsole.stampaMessaggio("Preventivo");
-        mostraRiepilogoPagamento();
-        InterazioneConsole.stampaMessaggio("Punti fedelta previsti: "
-                + preventivoBean.fornisciPuntiFedeltaPrevisti());
-    }
-
     private void mostraRiepilogoPagamento() {
         InterazioneConsole.stampaMessaggio("Gioco: " + preventivoBean.fornisciTitoloGioco());
         InterazioneConsole.stampaMessaggio("Giorno: "
@@ -71,6 +62,8 @@ public class PagamentoCliController {
                 + preventivoBean.fornisciNumeroPostiRichiesti());
         InterazioneConsole.stampaMessaggio("Totale: "
                 + FormattatoreImporti.formattaImporto(preventivoBean.fornisciImportoTotale()));
+        InterazioneConsole.stampaMessaggio("Punti fedelta previsti: "
+                + preventivoBean.fornisciPuntiFedeltaPrevisti());
     }
 
     private MetodoPagamento selezionaMetodoPagamento() {
