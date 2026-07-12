@@ -16,7 +16,7 @@ public class AvvioJavaFX extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(PERCORSO_HOME)));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(PERCORSO_HOME))); //Ottiene la posizione del file FXML della Home (getClass().getResource). Si assicura che il file esista (Objects.requireNonNull). Legge l'XML e lo converte in oggetti grafici Java (FXMLLoader.load), salva l'intero pannello ottenuto nella variabile root
 
         primaryStage.setTitle(TITOLO_APPLICAZIONE);
         primaryStage.setScene(new Scene(root, LARGHEZZA_FINESTRA, ALTEZZA_FINESTRA));
@@ -24,8 +24,8 @@ public class AvvioJavaFX extends Application {
     }
 
     static void avvia() {
-        System.setProperty("prism.lcdtext", "false");
-        System.setProperty("prism.text", "t2k");
+        System.setProperty("prism.lcdtext", "false"); //Disattiva rendering per i vecchi schermi LCD
+        System.setProperty("prism.text", "t2k"); //Forza rendering testo
         launch();
     }
 }

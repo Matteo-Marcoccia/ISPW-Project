@@ -225,7 +225,7 @@ public class SchermataHomeController {
     }
 
     private void mostraComunicazioniCliente() {
-        List<String> comunicazioni = prenotaPostoControllerApplicativo.prelevaComunicazioniCliente(idSessione);
+        List<String> comunicazioni = prenotaPostoControllerApplicativo.consegnaComunicazioniDisponibiliCliente(idSessione);
         if (comunicazioni.isEmpty()) {
             return;
         }

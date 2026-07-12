@@ -1,5 +1,6 @@
 package com.questtable.session;
 
+import com.questtable.model.RuoloUtente;
 import com.questtable.model.Utente;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class SessionManagerSingleton {
     public String apriSessione(Utente utente) {
         String idSessioneAttiva = cercaIdentificativoSessioneAttivaPer(utente.fornisciUsername());
         if (idSessioneAttiva != null) {
-            return idSessioneAttiva;
+            throw new IllegalStateException("Utente gia' loggato.");
         }
 
         String idSessione = UUID.randomUUID().toString();
@@ -53,6 +54,18 @@ public class SessionManagerSingleton {
         return sessione;
     }
 
+    public void verificaSessioneConRuolo(String idSessione, RuoloUtente ruoloRichiesto) {
+        Session sessione = fornisciSessioneValida(idSessione);
+        verificaRuoloSessione(sessione, ruoloRichiesto);
+    }
+
+    public Session fornisciSessioneConRuolo(String idSessione, RuoloUtente ruoloRichiesto) {
+        Session sessione = fornisciSessioneValida(idSessione);
+        verificaRuoloSessione(sessione, ruoloRichiesto);
+
+        return sessione;
+    }
+
     public void chiudiSessione(String idSessione) {
         sessioniAttive.remove(idSessione);
     }
@@ -63,7 +76,12 @@ public class SessionManagerSingleton {
                 return session.fornisciIdentificativoSessione();
             }
         }
-
         return null;
+    }
+
+    private void verificaRuoloSessione(Session sessione, RuoloUtente ruoloRichiesto) {
+        if (!sessione.verificaRuolo(ruoloRichiesto)) {
+            throw new IllegalStateException("Sessione non valida per l'operazione richiesta.");
+        }
     }
 }

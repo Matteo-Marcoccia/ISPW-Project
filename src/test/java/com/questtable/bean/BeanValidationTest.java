@@ -178,12 +178,10 @@ class BeanValidationTest {
     @Test
     void notificaPrenotazioneBeanEsponeDatiComunicazione() {
         NotificaPrenotazioneBean notificaPrenotazioneBean = new NotificaPrenotazioneBean(
-                7,
                 "gestore",
                 "Nuova richiesta di prenotazione."
         );
 
-        assertEquals(7, notificaPrenotazioneBean.fornisciIdentificativoPrenotazione());
         assertEquals("gestore", notificaPrenotazioneBean.fornisciDestinatario());
         assertEquals("Nuova richiesta di prenotazione.", notificaPrenotazioneBean.fornisciMessaggio());
     }

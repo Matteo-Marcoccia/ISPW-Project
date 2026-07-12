@@ -158,8 +158,12 @@ public class SchermataHomeCliController {
         String nuovaSessione = loginCliController.effettuaLogin();
         if (nuovaSessione != null) {
             idSessione = nuovaSessione;
-            mostraAvvisoPrenotazioniInAttesa();
-            mostraComunicazioniCliente();
+            ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
+            if (profiloUtente.verificaRuolo(RuoloUtente.CLIENTE)) {
+                mostraComunicazioniCliente();
+            } else {
+                mostraAvvisoPrenotazioniInAttesa();
+            }
         }
     }
 
@@ -205,9 +209,7 @@ public class SchermataHomeCliController {
     }
 
     private void mostraAvvisoPrenotazioniInAttesa() {
-        ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
-        if (!profiloUtente.verificaRuolo(RuoloUtente.GESTORE)
-                || !prenotaPostoControllerApplicativo.verificaPrenotazioniInAttesa(idSessione)) {
+        if (!prenotaPostoControllerApplicativo.verificaPrenotazioniInAttesa(idSessione)) {
             return;
         }
 
@@ -216,12 +218,7 @@ public class SchermataHomeCliController {
     }
 
     private void mostraComunicazioniCliente() {
-        ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
-        if (!profiloUtente.verificaRuolo(RuoloUtente.CLIENTE)) {
-            return;
-        }
-
-        List<String> comunicazioni = prenotaPostoControllerApplicativo.prelevaComunicazioniCliente(idSessione);
+        List<String> comunicazioni = prenotaPostoControllerApplicativo.consegnaComunicazioniDisponibiliCliente(idSessione);
         if (comunicazioni.isEmpty()) {
             return;
         }

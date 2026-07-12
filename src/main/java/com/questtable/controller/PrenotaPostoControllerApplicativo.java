@@ -54,7 +54,7 @@ public class PrenotaPostoControllerApplicativo {
     }
 
     public ListaTavoliBean fornisciTavoliDisponibili(String idSessione, RicercaTavoliBean ricercaTavoliBean) {
-        fornisciSessioneConRuolo(idSessione, RuoloUtente.CLIENTE);
+        sessionManager.verificaSessioneConRuolo(idSessione, RuoloUtente.CLIENTE);
 
         String titoloGioco = null;
         GiornoSettimana giornoSettimana = null;
@@ -114,7 +114,7 @@ public class PrenotaPostoControllerApplicativo {
     }
 
     public PrenotazioneBean registraPrenotazione(String idSessione, PagamentoBean pagamentoBean) {
-        Session sessione = fornisciSessioneConRuolo(idSessione, RuoloUtente.CLIENTE);
+        Session sessione = sessionManager.fornisciSessioneConRuolo(idSessione, RuoloUtente.CLIENTE);
         if (pagamentoBean == null
                 || !pagamentoBean.verificaDatiPagamentoValidi()
                 || !pagamentoBean.verificaPagamentoEffettuato()) {
@@ -155,7 +155,7 @@ public class PrenotaPostoControllerApplicativo {
     }
 
     public ListaPrenotazioniBean fornisciPrenotazioniInAttesa(String idSessione) {
-        fornisciSessioneConRuolo(idSessione, RuoloUtente.GESTORE);
+        sessionManager.verificaSessioneConRuolo(idSessione, RuoloUtente.GESTORE);
 
         List<PrenotazioneBean> prenotazioniInAttesa = new ArrayList<>();
         for (Prenotazione prenotazione : prenotazioneDAO.recuperaPrenotazioniInAttesa()) {
@@ -166,7 +166,7 @@ public class PrenotaPostoControllerApplicativo {
     }
 
     public ListaPrenotazioniBean fornisciPrenotazioniCliente(String idSessione) {
-        Session sessione = fornisciSessioneConRuolo(idSessione, RuoloUtente.CLIENTE);
+        Session sessione = sessionManager.fornisciSessioneConRuolo(idSessione, RuoloUtente.CLIENTE);
 
         List<PrenotazioneBean> prenotazioniCliente = new ArrayList<>();
         for (Prenotazione prenotazione : prenotazioneDAO.recuperaPrenotazioniCliente(sessione.fornisciUsername())) {
@@ -177,7 +177,7 @@ public class PrenotaPostoControllerApplicativo {
     }
 
     public void confermaPrenotazione(String idSessione, int idPrenotazione) {
-        fornisciSessioneConRuolo(idSessione, RuoloUtente.GESTORE);
+        sessionManager.verificaSessioneConRuolo(idSessione, RuoloUtente.GESTORE);
 
         Prenotazione prenotazione = prenotazioneDAO.recuperaPrenotazione(idPrenotazione);
         if (prenotazione == null) {
@@ -198,22 +198,13 @@ public class PrenotaPostoControllerApplicativo {
     }
 
     public boolean verificaPrenotazioniInAttesa(String idSessione) {
-        fornisciSessioneConRuolo(idSessione, RuoloUtente.GESTORE);
+        sessionManager.verificaSessioneConRuolo(idSessione, RuoloUtente.GESTORE);
         return !prenotazioneDAO.recuperaPrenotazioniInAttesa().isEmpty();
     }
 
-    public List<String> prelevaComunicazioniCliente(String idSessione) {
-        Session sessione = fornisciSessioneConRuolo(idSessione, RuoloUtente.CLIENTE);
-        return servizioNotifichePrenotazione.prelevaComunicazioniPer(sessione.fornisciUsername());
-    }
-
-    private Session fornisciSessioneConRuolo(String idSessione, RuoloUtente ruoloRichiesto) {
-        Session sessione = sessionManager.fornisciSessioneValida(idSessione);
-        if (!sessione.verificaRuolo(ruoloRichiesto)) {
-            throw new IllegalStateException("Sessione non valida per l'operazione richiesta.");
-        }
-
-        return sessione;
+    public List<String> consegnaComunicazioniDisponibiliCliente(String idSessione) {
+        Session sessione = sessionManager.fornisciSessioneConRuolo(idSessione, RuoloUtente.CLIENTE);
+        return servizioNotifichePrenotazione.consegnaComunicazioniDisponibiliPer(sessione.fornisciUsername());
     }
 
     private int creaNuovoIdentificativoPrenotazione() {
@@ -259,7 +250,6 @@ public class PrenotaPostoControllerApplicativo {
 
     private void notificaGestorePrenotazioneInAttesa(Prenotazione prenotazione) {
         servizioNotifichePrenotazione.inviaNotificaAlGestore(new NotificaPrenotazioneBean(
-                prenotazione.fornisciIdentificativo(),
                 DESTINATARIO_GESTORE,
                 "Nuova richiesta di prenotazione da "
                         + prenotazione.fornisciUsernameCliente()
@@ -271,7 +261,6 @@ public class PrenotaPostoControllerApplicativo {
 
     private void notificaClientePrenotazioneConfermata(Prenotazione prenotazione) {
         servizioNotifichePrenotazione.inviaNotificaAlCliente(new NotificaPrenotazioneBean(
-                prenotazione.fornisciIdentificativo(),
                 prenotazione.fornisciUsernameCliente(),
                 "La tua prenotazione per "
                         + prenotazione.fornisciTitoloGiocoPrenotato()
