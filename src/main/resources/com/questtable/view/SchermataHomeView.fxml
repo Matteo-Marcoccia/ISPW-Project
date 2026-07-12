@@ -31,12 +31,17 @@
                </font>
             </Button>
             <Button fx:id="btnProfiloUtente" managed="false" mnemonicParsing="false" onAction="#onProfiloUtenteClick" style="-fx-background-color: rgba(255, 255, 255, 0.15); -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.3); -fx-border-radius: 20; -fx-border-width: 1; -fx-padding: 6 16 6 16; -fx-cursor: hand;" visible="false">
+                <font>
+                   <Font name="Segoe UI Bold" size="13.0" />
+                </font>
+             </Button>
+            <Button mnemonicParsing="false" onAction="#onEsciClick" style="-fx-background-color: rgba(255, 255, 255, 0.12); -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.32); -fx-border-radius: 20; -fx-border-width: 1; -fx-padding: 7 16 7 16; -fx-cursor: hand;" text="Esci">
                <font>
                   <Font name="Segoe UI Bold" size="13.0" />
                </font>
             </Button>
-         </children>
-      </HBox>
+          </children>
+       </HBox>
    </children>
 </HBox>
 

@@ -115,6 +115,13 @@ public class SchermataHomeController {
     }
 
     @FXML
+    void onEsciClick() {
+        if (MessaggiGrafici.richiediConfermaUscita()) {
+            Platform.exit();
+        }
+    }
+
+    @FXML
     void onProfiloUtenteClick() {
         boolean logoutConfermato = MessaggiGrafici.richiediConfermaLogout();
         if (!logoutConfermato) {

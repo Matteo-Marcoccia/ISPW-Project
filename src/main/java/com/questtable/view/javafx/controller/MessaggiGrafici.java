@@ -12,6 +12,9 @@ final class MessaggiGrafici {
     private static final String TITOLO_DISCONNESSIONE = "Disconnessione";
     private static final String INTESTAZIONE_DISCONNESSIONE = "Vuoi disconnetterti?";
     private static final String TESTO_DISCONNESSIONE = "Conferma per uscire dal tuo account.";
+    private static final String TITOLO_USCITA = "Uscita";
+    private static final String INTESTAZIONE_USCITA = "Vuoi chiudere QuestTable?";
+    private static final String TESTO_USCITA = "Conferma per terminare l'applicazione.";
     private static final String TITOLO_NOTIFICHE = "Notifiche";
     private static final String INTESTAZIONE_NOTIFICHE = "Hai nuove notifiche";
 
@@ -43,10 +46,18 @@ final class MessaggiGrafici {
     }
 
     static boolean richiediConfermaLogout() {
+        return richiediConferma(TITOLO_DISCONNESSIONE, INTESTAZIONE_DISCONNESSIONE, TESTO_DISCONNESSIONE);
+    }
+
+    static boolean richiediConfermaUscita() {
+        return richiediConferma(TITOLO_USCITA, INTESTAZIONE_USCITA, TESTO_USCITA);
+    }
+
+    private static boolean richiediConferma(String titolo, String intestazione, String contenuto) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(TITOLO_DISCONNESSIONE);
-        alert.setHeaderText(INTESTAZIONE_DISCONNESSIONE);
-        alert.setContentText(TESTO_DISCONNESSIONE);
+        alert.setTitle(titolo);
+        alert.setHeaderText(intestazione);
+        alert.setContentText(contenuto);
 
         Optional<ButtonType> scelta = alert.showAndWait();
         return scelta.isPresent() && scelta.get() == ButtonType.OK;
