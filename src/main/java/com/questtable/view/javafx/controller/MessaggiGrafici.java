@@ -15,8 +15,10 @@ final class MessaggiGrafici {
     private static final String TITOLO_USCITA = "Uscita";
     private static final String INTESTAZIONE_USCITA = "Vuoi chiudere QuestTable?";
     private static final String TESTO_USCITA = "Conferma per terminare l'applicazione.";
-    private static final String TITOLO_NOTIFICHE = "Notifiche";
-    private static final String INTESTAZIONE_NOTIFICHE = "Hai nuove notifiche";
+    private static final String TITOLO_PRENOTAZIONI_IN_ATTESA = "Prenotazioni in attesa";
+    private static final String INTESTAZIONE_PRENOTAZIONI_IN_ATTESA = "Sono presenti richieste da confermare";
+    private static final String TESTO_PRENOTAZIONI_IN_ATTESA =
+            "Apri la sezione Conferma prenotazioni in attesa per gestirle.";
 
     private MessaggiGrafici() {
     }
@@ -33,8 +35,12 @@ final class MessaggiGrafici {
         mostraInformazione(TITOLO_FUNZIONE_NON_DISPONIBILE, intestazione, TESTO_FUNZIONE_NON_DISPONIBILE);
     }
 
-    static void mostraNotifiche(String contenuto) {
-        mostraInformazione(TITOLO_NOTIFICHE, INTESTAZIONE_NOTIFICHE, contenuto);
+    static void mostraAvvisoPrenotazioniInAttesa() {
+        mostraInformazione(
+                TITOLO_PRENOTAZIONI_IN_ATTESA,
+                INTESTAZIONE_PRENOTAZIONI_IN_ATTESA,
+                TESTO_PRENOTAZIONI_IN_ATTESA
+        );
     }
 
     private static void mostraInformazione(String titolo, String intestazione, String contenuto) {

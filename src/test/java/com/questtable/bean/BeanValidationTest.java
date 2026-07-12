@@ -176,20 +176,16 @@ class BeanValidationTest {
     }
 
     @Test
-    void listaNotificheEsponeCopiaNonModificabile() {
-        ListaNotificheBean listaNotificheBean = new ListaNotificheBean(List.of("Prima notifica", "Seconda notifica"));
-        List<String> notificheNonModificabili = listaNotificheBean.fornisciMessaggi();
+    void notificaPrenotazioneBeanEsponeDatiComunicazione() {
+        NotificaPrenotazioneBean notificaPrenotazioneBean = new NotificaPrenotazioneBean(
+                7,
+                "gestore",
+                "Nuova richiesta di prenotazione."
+        );
 
-        assertFalse(listaNotificheBean.verificaAssenzaNotifiche());
-        assertEquals(2, notificheNonModificabili.size());
-        assertThrows(UnsupportedOperationException.class, notificheNonModificabili::clear);
-    }
-
-    @Test
-    void listaNotificheRiconosceAssenzaMessaggi() {
-        ListaNotificheBean listaNotificheBean = new ListaNotificheBean(List.of());
-
-        assertTrue(listaNotificheBean.verificaAssenzaNotifiche());
+        assertEquals(7, notificaPrenotazioneBean.fornisciIdentificativoPrenotazione());
+        assertEquals("gestore", notificaPrenotazioneBean.fornisciDestinatario());
+        assertEquals("Nuova richiesta di prenotazione.", notificaPrenotazioneBean.fornisciMessaggio());
     }
 
     @Test

@@ -109,24 +109,6 @@ class ModelBehaviorTest {
     }
 
     @Test
-    void notificaNasceNonLettaEPuoEssereSegnataComeLetta() {
-        Notifica notifica = new Notifica(
-                "admin",
-                TipoNotifica.RICHIESTA_PRENOTAZIONE,
-                "Nuova richiesta di prenotazione."
-        );
-
-        assertEquals("admin", notifica.fornisciUsernameDestinatario());
-        assertEquals(TipoNotifica.RICHIESTA_PRENOTAZIONE, notifica.fornisciTipoNotifica());
-        assertEquals("Nuova richiesta di prenotazione.", notifica.fornisciMessaggio());
-        assertTrue(notifica.verificaNonLetta());
-
-        notifica.segnaComeLetta();
-
-        assertFalse(notifica.verificaNonLetta());
-    }
-
-    @Test
     void prenotazioneRicostruitaEsponeDatiCollegati() {
         Prenotazione prenotazione = creaPrenotazioneRicostruita();
 

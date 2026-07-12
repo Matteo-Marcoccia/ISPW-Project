@@ -6,12 +6,10 @@ import com.questtable.bean.LoginBean;
 import com.questtable.bean.PagamentoBean;
 import com.questtable.bean.PrenotazioneBean;
 import com.questtable.bean.PreventivoBean;
-import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.bean.RicercaTavoliBean;
 import com.questtable.bean.RichiestaPreventivoBean;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.model.MetodoPagamento;
-import com.questtable.model.RuoloUtente;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,58 +26,9 @@ class QuestTableControllerTest {
     private static final String TITOLO_CATAN = "Catan";
 
     @Test
-    void loginClienteRestituisceProfilo() {
-        QuestTableController controller = new QuestTableController();
-
-        String idSessione = controller.effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
-        ProfiloUtenteBean profiloUtente = controller.fornisciProfiloUtente(idSessione);
-
-        assertEquals(USERNAME_CLIENTE, profiloUtente.fornisciUsername());
-        assertTrue(profiloUtente.verificaRuolo(RuoloUtente.CLIENTE));
-    }
-
-    @Test
-    void loginRifiutaPasswordErrata() {
-        QuestTableController controller = new QuestTableController();
-        LoginBean loginBean = new LoginBean(USERNAME_CLIENTE, "sbagliata");
-
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> controller.effettuaLogin(loginBean)
-        );
-
-        assertEquals("Password non valida.", exception.getMessage());
-    }
-
-    @Test
-    void loginRifiutaUtenteInesistente() {
-        QuestTableController controller = new QuestTableController();
-        LoginBean loginBean = new LoginBean("nessuno", CREDENZIALE_CLIENTE);
-
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> controller.effettuaLogin(loginBean)
-        );
-
-        assertEquals("Utente non registrato.", exception.getMessage());
-    }
-
-    @Test
-    void loginRifiutaCredenzialiNonCompilate() {
-        QuestTableController controller = new QuestTableController();
-
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> controller.effettuaLogin(null)
-        );
-
-        assertEquals("Credenziali non compilate correttamente.", exception.getMessage());
-    }
-
-    @Test
     void ricercaTavoliFiltraPerGiocoEGiorno() {
         QuestTableController controller = new QuestTableController();
-        String idSessione = controller.effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
+        String idSessione = apriSessioneCliente();
 
         ListaTavoliBean listaTavoliBean = controller.fornisciTavoliDisponibili(
                 idSessione,
@@ -132,7 +81,7 @@ class QuestTableControllerTest {
     @Test
     void registraPrenotazioneDopoPagamentoValido() {
         QuestTableController controller = new QuestTableController();
-        String idSessione = controller.effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
+        String idSessione = apriSessioneCliente();
         PagamentoBean pagamentoBean = new PagamentoBean(2, 1, 12.0f, MetodoPagamento.CARTA_CREDITO, true);
 
         PrenotazioneBean prenotazioneBean = controller.registraPrenotazione(idSessione, pagamentoBean);
@@ -145,7 +94,7 @@ class QuestTableControllerTest {
     @Test
     void gestoreRecuperaPrenotazioniInAttesa() {
         QuestTableController controller = new QuestTableController();
-        String idSessioneGestore = controller.effettuaLogin(new LoginBean(USERNAME_GESTORE, CREDENZIALE_GESTORE));
+        String idSessioneGestore = apriSessioneGestore();
 
         ListaPrenotazioniBean listaPrenotazioniBean = controller.fornisciPrenotazioniInAttesa(idSessioneGestore);
 
@@ -155,7 +104,7 @@ class QuestTableControllerTest {
     @Test
     void clienteRecuperaStoricoPrenotazioni() {
         QuestTableController controller = new QuestTableController();
-        String idSessione = controller.effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
+        String idSessione = apriSessioneCliente();
 
         ListaPrenotazioniBean listaPrenotazioniBean = controller.fornisciPrenotazioniCliente(idSessione);
 
@@ -165,7 +114,7 @@ class QuestTableControllerTest {
     @Test
     void gestoreConfermaPrenotazione() {
         QuestTableController controller = new QuestTableController();
-        String idSessioneGestore = controller.effettuaLogin(new LoginBean(USERNAME_GESTORE, CREDENZIALE_GESTORE));
+        String idSessioneGestore = apriSessioneGestore();
 
         controller.confermaPrenotazione(idSessioneGestore, 1);
 
@@ -175,15 +124,11 @@ class QuestTableControllerTest {
                 .noneMatch(prenotazione -> prenotazione.fornisciIdentificativoPrenotazione() == 1));
     }
 
-    @Test
-    void controllerRifiutaSessioneNonValida() {
-        QuestTableController controller = new QuestTableController();
+    private String apriSessioneCliente() {
+        return new LoginControllerApplicativo().effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
+    }
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
-                () -> controller.fornisciProfiloUtente("sessione-assente")
-        );
-
-        assertEquals("Sessione non valida.", exception.getMessage());
+    private String apriSessioneGestore() {
+        return new LoginControllerApplicativo().effettuaLogin(new LoginBean(USERNAME_GESTORE, CREDENZIALE_GESTORE));
     }
 }

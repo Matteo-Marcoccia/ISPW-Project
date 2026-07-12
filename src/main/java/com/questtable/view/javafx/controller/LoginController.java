@@ -1,11 +1,9 @@
 package com.questtable.view.javafx.controller;
 
-import com.questtable.bean.ListaNotificheBean;
 import com.questtable.bean.LoginBean;
 import com.questtable.bean.ProfiloUtenteBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.LoginControllerApplicativo;
 import com.questtable.model.RuoloUtente;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
@@ -16,10 +14,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
-import java.util.StringJoiner;
 
 public class LoginController {
-    private final QuestTableController questTableController = new QuestTableController();
+    private final LoginControllerApplicativo loginControllerApplicativo = new LoginControllerApplicativo();
     private DestinazioneDopoLogin destinazioneDopoLogin = DestinazioneDopoLogin.HOME;
 
     @FXML
@@ -43,8 +40,8 @@ public class LoginController {
         LoginBean loginBean = new LoginBean(txtUsername.getText(), txtPassword.getText());
 
         try {
-            String idSessione = questTableController.effettuaLogin(loginBean);
-            ProfiloUtenteBean profiloUtente = questTableController.fornisciProfiloUtente(idSessione);
+            String idSessione = loginControllerApplicativo.effettuaLogin(loginBean);
+            ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
             apriSchermataSuccessiva(idSessione, profiloUtente);
         } catch (IllegalArgumentException | IllegalStateException exception) {
             mostraMessaggio(exception.getMessage());
@@ -74,7 +71,6 @@ public class LoginController {
         listaTavoliController.inizializzaSessione(idSessione);
 
         aggiornaScena(root);
-        Platform.runLater(() -> consegnaNotifiche(idSessione));
     }
 
     private void apriHomeConProfilo(String idSessione) throws IOException {
@@ -101,17 +97,4 @@ public class LoginController {
         lblMessaggioLogin.setText(messaggio);
     }
 
-    private void consegnaNotifiche(String idSessione) {
-        ListaNotificheBean notifiche = questTableController.consegnaNotificheNonLette(idSessione);
-        if (notifiche.verificaAssenzaNotifiche()) {
-            return;
-        }
-
-        StringJoiner messaggi = new StringJoiner(System.lineSeparator());
-        for (String messaggio : notifiche.fornisciMessaggi()) {
-            messaggi.add(messaggio);
-        }
-
-        MessaggiGrafici.mostraNotifiche(messaggi.toString());
-    }
 }

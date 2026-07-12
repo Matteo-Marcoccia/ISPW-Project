@@ -1,7 +1,6 @@
 package com.questtable.dao.file_system;
 
 import com.questtable.dao.DAOFactory;
-import com.questtable.dao.INotificaDAO;
 import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
@@ -11,7 +10,6 @@ public class FileSystemDAOFactory extends DAOFactory {
     private final FileSystemSessioneTavoloDAO sessioneTavoloDAO = new FileSystemSessioneTavoloDAO();
     private final FileSystemPrenotazioneDAO prenotazioneDAO =
             new FileSystemPrenotazioneDAO(utenteDAO, sessioneTavoloDAO);
-    private final FileSystemNotificaDAO notificaDAO = new FileSystemNotificaDAO();
 
     @Override
     public IUtenteDAO fornisciUtenteDAO() {
@@ -26,10 +24,5 @@ public class FileSystemDAOFactory extends DAOFactory {
     @Override
     public IPrenotazioneDAO fornisciPrenotazioneDAO() {
         return prenotazioneDAO;
-    }
-
-    @Override
-    public INotificaDAO fornisciNotificaDAO() {
-        return notificaDAO;
     }
 }

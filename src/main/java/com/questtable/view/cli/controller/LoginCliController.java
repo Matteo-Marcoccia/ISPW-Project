@@ -2,16 +2,16 @@ package com.questtable.view.cli.controller;
 
 import com.questtable.bean.LoginBean;
 import com.questtable.bean.ProfiloUtenteBean;
-import com.questtable.controller.QuestTableController;
+import com.questtable.controller.LoginControllerApplicativo;
 
 import java.util.Scanner;
 
 public class LoginCliController {
-    private final QuestTableController questTableController;
+    private final LoginControllerApplicativo loginControllerApplicativo;
     private final Scanner scanner;
 
-    public LoginCliController(QuestTableController questTableController, Scanner scanner) {
-        this.questTableController = questTableController;
+    public LoginCliController(LoginControllerApplicativo loginControllerApplicativo, Scanner scanner) {
+        this.loginControllerApplicativo = loginControllerApplicativo;
         this.scanner = scanner;
     }
 
@@ -20,8 +20,8 @@ public class LoginCliController {
         String password = InterazioneConsole.leggiTesto(scanner, "Password: ");
 
         try {
-            String idSessione = questTableController.effettuaLogin(new LoginBean(username, password));
-            ProfiloUtenteBean profiloUtente = questTableController.fornisciProfiloUtente(idSessione);
+            String idSessione = loginControllerApplicativo.effettuaLogin(new LoginBean(username, password));
+            ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
             InterazioneConsole.stampaMessaggio(
                     "Accesso effettuato. Bentornato, " + profiloUtente.fornisciUsername() + ".");
             return idSessione;

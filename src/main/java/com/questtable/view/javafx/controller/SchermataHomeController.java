@@ -1,7 +1,7 @@
 package com.questtable.view.javafx.controller;
 
-import com.questtable.bean.ListaNotificheBean;
 import com.questtable.bean.ProfiloUtenteBean;
+import com.questtable.controller.LoginControllerApplicativo;
 import com.questtable.controller.QuestTableController;
 import com.questtable.model.RuoloUtente;
 import javafx.application.Platform;
@@ -18,12 +18,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.io.IOException;
-import java.util.StringJoiner;
 
 public class SchermataHomeController {
     private static final String FONT_PRINCIPALE = "Segoe UI";
 
     private final QuestTableController questTableController = new QuestTableController();
+    private final LoginControllerApplicativo loginControllerApplicativo = new LoginControllerApplicativo();
 
     private String idSessione;
 
@@ -60,7 +60,7 @@ public class SchermataHomeController {
     }
 
     public void inizializzaSessione(String idSessione) {
-        ProfiloUtenteBean profiloUtente = questTableController.fornisciProfiloUtente(idSessione);
+        ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
         inizializzaSessione(idSessione, profiloUtente);
     }
 
@@ -79,7 +79,6 @@ public class SchermataHomeController {
                     + "-fx-border-color: rgba(178, 255, 244, 0.45); -fx-border-radius: 16; -fx-border-width: 1;");
             btnStoricoPrenotazioni.setVisible(true);
             btnStoricoPrenotazioni.setManaged(true);
-            pianificaConsegnaNotifiche();
             return;
         }
 
@@ -91,7 +90,7 @@ public class SchermataHomeController {
         boxShop.setManaged(false);
         boxGestore.setVisible(true);
         boxGestore.setManaged(true);
-        pianificaConsegnaNotifiche();
+        pianificaAvvisoPrenotazioniInAttesa();
     }
 
     @FXML
@@ -128,7 +127,7 @@ public class SchermataHomeController {
             return;
         }
 
-        questTableController.effettuaLogout(idSessione);
+        loginControllerApplicativo.effettuaLogout(idSessione);
         idSessione = null;
 
         btnAccedi.setVisible(true);
@@ -213,21 +212,13 @@ public class SchermataHomeController {
         return etichetta;
     }
 
-    private void consegnaNotifiche() {
-        ListaNotificheBean notifiche = questTableController.consegnaNotificheNonLette(idSessione);
-        if (notifiche.verificaAssenzaNotifiche()) {
-            return;
+    private void mostraAvvisoPrenotazioniInAttesa() {
+        if (questTableController.verificaPrenotazioniInAttesa(idSessione)) {
+            MessaggiGrafici.mostraAvvisoPrenotazioniInAttesa();
         }
-
-        StringJoiner messaggi = new StringJoiner(System.lineSeparator());
-        for (String messaggio : notifiche.fornisciMessaggi()) {
-            messaggi.add(messaggio);
-        }
-
-        MessaggiGrafici.mostraNotifiche(messaggi.toString());
     }
 
-    private void pianificaConsegnaNotifiche() {
-        Platform.runLater(this::consegnaNotifiche);
+    private void pianificaAvvisoPrenotazioniInAttesa() {
+        Platform.runLater(this::mostraAvvisoPrenotazioniInAttesa);
     }
 }

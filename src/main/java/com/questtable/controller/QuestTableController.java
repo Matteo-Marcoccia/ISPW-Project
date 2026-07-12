@@ -1,33 +1,29 @@
 package com.questtable.controller;
 
 import com.questtable.bean.InfoTavoloBean;
-import com.questtable.bean.ListaNotificheBean;
 import com.questtable.bean.ListaPrenotazioniBean;
 import com.questtable.bean.ListaTavoliBean;
-import com.questtable.bean.LoginBean;
+import com.questtable.bean.NotificaPrenotazioneBean;
 import com.questtable.bean.PagamentoBean;
 import com.questtable.bean.PostiTavoloBean;
 import com.questtable.bean.PrenotazioneBean;
-import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.bean.PreventivoBean;
 import com.questtable.bean.RicercaTavoliBean;
 import com.questtable.bean.RichiestaPreventivoBean;
 import com.questtable.bean.TavoloPrenotatoBean;
 import com.questtable.dao.DAOFactory;
-import com.questtable.dao.INotificaDAO;
 import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
 import com.questtable.model.Cliente;
 import com.questtable.model.GiornoSettimana;
-import com.questtable.model.Notifica;
 import com.questtable.model.Prenotazione;
 import com.questtable.model.RegolaPuntiFedelta;
 import com.questtable.model.RuoloUtente;
 import com.questtable.model.SessioneTavolo;
 import com.questtable.model.StatoPrenotazione;
-import com.questtable.model.TipoNotifica;
 import com.questtable.model.Utente;
+import com.questtable.service.ServizioNotifichePrenotazione;
 import com.questtable.session.Session;
 import com.questtable.session.SessionManagerSingleton;
 
@@ -38,12 +34,12 @@ import java.util.List;
 public class QuestTableController {
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FORMATO_ORA = DateTimeFormatter.ofPattern("HH:mm");
-    private static final String USERNAME_GESTORE_NOTIFICHE = "admin";
+    private static final String DESTINATARIO_GESTORE = "gestore";
 
     private final IUtenteDAO utenteDAO;
     private final ISessioneTavoloDAO sessioneTavoloDAO;
     private final IPrenotazioneDAO prenotazioneDAO;
-    private final INotificaDAO notificaDAO;
+    private final ServizioNotifichePrenotazione servizioNotifichePrenotazione;
     private final SessionManagerSingleton sessionManager;
 
     public QuestTableController() {
@@ -51,44 +47,8 @@ public class QuestTableController {
         utenteDAO = daoFactory.fornisciUtenteDAO();
         sessioneTavoloDAO = daoFactory.fornisciSessioneTavoloDAO();
         prenotazioneDAO = daoFactory.fornisciPrenotazioneDAO();
-        notificaDAO = daoFactory.fornisciNotificaDAO();
+        servizioNotifichePrenotazione = new ServizioNotifichePrenotazione();
         sessionManager = SessionManagerSingleton.fornisciIstanza();
-    }
-
-    public String effettuaLogin(LoginBean loginBean) {
-        if (loginBean == null || !loginBean.verificaCampiCompilati()) {
-            throw new IllegalArgumentException("Credenziali non compilate correttamente.");
-        }
-
-        Utente utente = utenteDAO.recuperaUtente(loginBean.fornisciUsername());
-        if (utente == null) {
-            throw new IllegalArgumentException("Utente non registrato.");
-        }
-
-        if (!utente.verificaPassword(loginBean.fornisciPassword())) {
-            throw new IllegalArgumentException("Password non valida.");
-        }
-
-        return sessionManager.apriSessione(utente);
-    }
-
-    public ProfiloUtenteBean fornisciProfiloUtente(String idSessione) {
-        Session sessione = fornisciSessione(idSessione);
-        Utente utente = utenteDAO.recuperaUtente(sessione.fornisciUsername());
-        if (utente == null) {
-            throw new IllegalStateException("Utente collegato alla sessione non trovato.");
-        }
-
-        int puntiFedelta = 0;
-        if (utente instanceof Cliente cliente) {
-            puntiFedelta = cliente.fornisciPuntiFedelta();
-        }
-
-        return new ProfiloUtenteBean(
-                utente.fornisciUsername(),
-                utente.fornisciRuolo(),
-                puntiFedelta
-        );
     }
 
     public ListaTavoliBean fornisciTavoliDisponibili(String idSessione, RicercaTavoliBean ricercaTavoliBean) {
@@ -235,24 +195,9 @@ public class QuestTableController {
         notificaClientePrenotazioneConfermata(prenotazione);
     }
 
-    public ListaNotificheBean consegnaNotificheNonLette(String idSessione) {
-        Session sessione = fornisciSessione(idSessione);
-
-        List<Notifica> notifiche = notificaDAO.recuperaNotificheNonLette(sessione.fornisciUsername());
-        List<String> messaggi = new ArrayList<>();
-        for (Notifica notifica : notifiche) {
-            messaggi.add(notifica.fornisciMessaggio());
-        }
-
-        if (!messaggi.isEmpty()) {
-            notificaDAO.segnaNotificheComeLette(sessione.fornisciUsername());
-        }
-
-        return new ListaNotificheBean(messaggi);
-    }
-
-    public void effettuaLogout(String idSessione) {
-        sessionManager.chiudiSessione(idSessione);
+    public boolean verificaPrenotazioniInAttesa(String idSessione) {
+        fornisciSessioneConRuolo(idSessione, RuoloUtente.GESTORE);
+        return !prenotazioneDAO.recuperaPrenotazioniInAttesa().isEmpty();
     }
 
     private Session fornisciSessione(String idSessione) {
@@ -315,9 +260,9 @@ public class QuestTableController {
     }
 
     private void notificaGestorePrenotazioneInAttesa(Prenotazione prenotazione) {
-        notificaDAO.salvaNuovaNotifica(new Notifica(
-                USERNAME_GESTORE_NOTIFICHE,
-                TipoNotifica.RICHIESTA_PRENOTAZIONE,
+        servizioNotifichePrenotazione.inviaNotificaAlGestore(new NotificaPrenotazioneBean(
+                prenotazione.fornisciIdentificativo(),
+                DESTINATARIO_GESTORE,
                 "Nuova richiesta di prenotazione da "
                         + prenotazione.fornisciUsernameCliente()
                         + " per "
@@ -327,9 +272,9 @@ public class QuestTableController {
     }
 
     private void notificaClientePrenotazioneConfermata(Prenotazione prenotazione) {
-        notificaDAO.salvaNuovaNotifica(new Notifica(
+        servizioNotifichePrenotazione.inviaNotificaAlCliente(new NotificaPrenotazioneBean(
+                prenotazione.fornisciIdentificativo(),
                 prenotazione.fornisciUsernameCliente(),
-                TipoNotifica.PRENOTAZIONE_CONFERMATA,
                 "La tua prenotazione per "
                         + prenotazione.fornisciTitoloGiocoPrenotato()
                         + " e' stata confermata."

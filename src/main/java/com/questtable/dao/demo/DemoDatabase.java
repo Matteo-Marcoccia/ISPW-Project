@@ -3,15 +3,12 @@ package com.questtable.dao.demo;
 import com.questtable.model.Cliente;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.model.Gioco;
-import com.questtable.model.Notifica;
 import com.questtable.model.Prenotazione;
 import com.questtable.model.RuoloUtente;
 import com.questtable.model.SessioneTavolo;
 import com.questtable.model.Utente;
 
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 final class DemoDatabase {
@@ -23,7 +20,6 @@ final class DemoDatabase {
     static final Map<String, Utente> utenti = new HashMap<>();
     static final Map<Integer, SessioneTavolo> sessioniTavolo = new HashMap<>();
     static final Map<Integer, Prenotazione> prenotazioni = new HashMap<>();
-    static final List<Notifica> notifiche = new ArrayList<>();
 
     static {
         inizializzaUtenti();

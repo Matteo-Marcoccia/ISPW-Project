@@ -1,7 +1,7 @@
 package com.questtable.view.cli.controller;
 
-import com.questtable.bean.ListaNotificheBean;
 import com.questtable.bean.ProfiloUtenteBean;
+import com.questtable.controller.LoginControllerApplicativo;
 import com.questtable.controller.QuestTableController;
 import com.questtable.model.RuoloUtente;
 
@@ -12,6 +12,7 @@ public class SchermataHomeCliController {
     private static final String VOCE_ESCI = "0. Esci";
 
     private final QuestTableController questTableController = new QuestTableController();
+    private final LoginControllerApplicativo loginControllerApplicativo = new LoginControllerApplicativo();
     private final Scanner scanner;
 
     private String idSessione;
@@ -46,7 +47,7 @@ public class SchermataHomeCliController {
             return;
         }
 
-        ProfiloUtenteBean profiloUtente = questTableController.fornisciProfiloUtente(idSessione);
+        ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
         if (profiloUtente.verificaRuolo(RuoloUtente.CLIENTE)) {
             InterazioneConsole.stampaMessaggio("1. Prenota posto al tavolo");
             InterazioneConsole.stampaMessaggio("2. Storico prenotazioni");
@@ -66,7 +67,7 @@ public class SchermataHomeCliController {
             return;
         }
 
-        ProfiloUtenteBean profiloUtente = questTableController.fornisciProfiloUtente(idSessione);
+        ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
         if (profiloUtente.verificaRuolo(RuoloUtente.CLIENTE)) {
             InterazioneConsole.stampaMessaggio("Profilo: " + profiloUtente.fornisciUsername()
                     + " | " + profiloUtente.fornisciPuntiFedelta() + " punti fedelta");
@@ -81,7 +82,7 @@ public class SchermataHomeCliController {
             return gestisciSceltaOspite(scelta);
         }
 
-        ProfiloUtenteBean profiloUtente = questTableController.fornisciProfiloUtente(idSessione);
+        ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
         if (profiloUtente.verificaRuolo(RuoloUtente.CLIENTE)) {
             return gestisciSceltaCliente(scelta);
         }
@@ -152,11 +153,11 @@ public class SchermataHomeCliController {
     }
 
     private void apriLogin() {
-        LoginCliController loginCliController = new LoginCliController(questTableController, scanner);
+        LoginCliController loginCliController = new LoginCliController(loginControllerApplicativo, scanner);
         String nuovaSessione = loginCliController.effettuaLogin();
         if (nuovaSessione != null) {
             idSessione = nuovaSessione;
-            consegnaNotifiche();
+            mostraAvvisoPrenotazioniInAttesa();
         }
     }
 
@@ -179,7 +180,7 @@ public class SchermataHomeCliController {
     }
 
     private void effettuaLogout() {
-        questTableController.effettuaLogout(idSessione);
+        loginControllerApplicativo.effettuaLogout(idSessione);
         idSessione = null;
         InterazioneConsole.stampaMessaggio("Logout effettuato.");
     }
@@ -193,7 +194,7 @@ public class SchermataHomeCliController {
             return false;
         }
 
-        ProfiloUtenteBean profiloUtente = questTableController.fornisciProfiloUtente(idSessione);
+        ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
         return profiloUtente.verificaRuolo(RuoloUtente.CLIENTE);
     }
 
@@ -201,16 +202,14 @@ public class SchermataHomeCliController {
         InterazioneConsole.stampaSceltaNonValida();
     }
 
-    private void consegnaNotifiche() {
-        ListaNotificheBean notifiche = questTableController.consegnaNotificheNonLette(idSessione);
-        if (notifiche.verificaAssenzaNotifiche()) {
+    private void mostraAvvisoPrenotazioniInAttesa() {
+        ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
+        if (!profiloUtente.verificaRuolo(RuoloUtente.GESTORE)
+                || !questTableController.verificaPrenotazioniInAttesa(idSessione)) {
             return;
         }
 
         InterazioneConsole.stampaSeparatore();
-        InterazioneConsole.stampaMessaggio("Notifiche");
-        for (String messaggio : notifiche.fornisciMessaggi()) {
-            InterazioneConsole.stampaMessaggio("- " + messaggio);
-        }
+        InterazioneConsole.stampaMessaggio("Sono presenti prenotazioni in attesa di conferma.");
     }
 }

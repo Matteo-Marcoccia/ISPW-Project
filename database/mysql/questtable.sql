@@ -2,6 +2,8 @@ CREATE DATABASE IF NOT EXISTS questtable;
 
 USE questtable;
 
+DROP TABLE IF EXISTS notifiche;
+
 CREATE TABLE IF NOT EXISTS utenti (
     username VARCHAR(50) PRIMARY KEY,
     parola_accesso VARCHAR(100) NOT NULL,
@@ -31,15 +33,6 @@ CREATE TABLE IF NOT EXISTS prenotazioni (
     stato VARCHAR(20) NOT NULL,
     FOREIGN KEY (username_cliente) REFERENCES utenti(username),
     FOREIGN KEY (id_tavolo) REFERENCES sessioni_tavolo(id_tavolo)
-);
-
-CREATE TABLE IF NOT EXISTS notifiche (
-    id_notifica INT PRIMARY KEY AUTO_INCREMENT,
-    username_destinatario VARCHAR(50) NOT NULL,
-    tipo VARCHAR(40) NOT NULL,
-    messaggio VARCHAR(255) NOT NULL,
-    letta BOOLEAN NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (username_destinatario) REFERENCES utenti(username)
 );
 
 INSERT INTO utenti (username, parola_accesso, ruolo, punti_fedelta)

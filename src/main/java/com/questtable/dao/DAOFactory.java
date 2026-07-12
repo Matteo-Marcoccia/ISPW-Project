@@ -25,8 +25,6 @@ public abstract class DAOFactory {
 
     public abstract IPrenotazioneDAO fornisciPrenotazioneDAO();
 
-    public abstract INotificaDAO fornisciNotificaDAO();
-
     private static class MySQLFactoryHolder {
         private static final DAOFactory ISTANZA = new MySQLDAOFactory();
     }
