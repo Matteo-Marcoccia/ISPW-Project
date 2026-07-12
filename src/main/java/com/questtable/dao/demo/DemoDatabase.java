@@ -43,11 +43,15 @@ final class DemoDatabase {
         Gioco catan = new Gioco("Catan", "/com/questtable/images/giochi/catan.png");
         Gioco ticketToRide = new Gioco("Ticket to Ride", "/com/questtable/images/giochi/ticket-to-ride.png");
         Gioco pandemic = new Gioco("Pandemic", "/com/questtable/images/giochi/pandemic.png");
+        Gioco karakIi = new Gioco("Karak II", "/com/questtable/images/giochi/karak-ii.png");
+        Gioco monopoly = new Gioco("Monopoly", "/com/questtable/images/giochi/monopoly.png");
 
         sessioniTavolo.put(1, new SessioneTavolo(1, catan, 4, 4, GiornoSettimana.GIOVEDI, "18:00 - 20:00", 12.00f));
         sessioniTavolo.put(2, new SessioneTavolo(2, catan, 4, 2, GiornoSettimana.SABATO, "21:00 - 23:00", 12.00f));
         sessioniTavolo.put(3, new SessioneTavolo(3, ticketToRide, 5, 3, GiornoSettimana.VENERDI, "19:00 - 21:00", 10.00f));
         sessioniTavolo.put(4, new SessioneTavolo(4, pandemic, 4, 0, GiornoSettimana.DOMENICA, "17:00 - 19:00", 8.00f));
+        sessioniTavolo.put(5, new SessioneTavolo(5, karakIi, 5, 5, GiornoSettimana.MARTEDI, "18:30 - 20:30", 9.00f));
+        sessioniTavolo.put(6, new SessioneTavolo(6, monopoly, 6, 6, GiornoSettimana.MERCOLEDI, "20:00 - 22:00", 7.00f));
     }
 
     private static void inizializzaPrenotazioni() {

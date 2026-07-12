@@ -15,6 +15,8 @@ import com.questtable.dao.DAOFactory;
 import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
+import com.questtable.exception.PaymentException;
+import com.questtable.exception.PostiNonDisponibiliException;
 import com.questtable.model.Cliente;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.model.Prenotazione;
@@ -93,7 +95,7 @@ public class QuestTableController {
         }
 
         if (tavolo.verificaPostiNonPrenotabili(richiestaPreventivoBean.fornisciNumeroPostiRichiesti())) {
-            throw new IllegalArgumentException("Posti non disponibili per il tavolo selezionato.");
+            throw new PostiNonDisponibiliException("Posti non disponibili per il tavolo selezionato.");
         }
 
         int postiRichiesti = richiestaPreventivoBean.fornisciNumeroPostiRichiesti();
@@ -116,7 +118,7 @@ public class QuestTableController {
         if (pagamentoBean == null
                 || !pagamentoBean.verificaDatiPagamentoValidi()
                 || !pagamentoBean.verificaPagamentoEffettuato()) {
-            throw new IllegalArgumentException("Pagamento non valido.");
+            throw new PaymentException("Pagamento non valido.");
         }
 
         Utente utente = utenteDAO.recuperaUtente(sessione.fornisciUsername());
@@ -134,7 +136,7 @@ public class QuestTableController {
                 pagamentoBean.fornisciNumeroPostiRichiesti()
         );
         if (!postiPrenotati) {
-            throw new IllegalArgumentException("Posti non disponibili per il tavolo selezionato.");
+            throw new PostiNonDisponibiliException("Posti non disponibili per il tavolo selezionato.");
         }
 
         int idPrenotazione = creaNuovoIdentificativoPrenotazione();
@@ -200,17 +202,13 @@ public class QuestTableController {
         return !prenotazioneDAO.recuperaPrenotazioniInAttesa().isEmpty();
     }
 
-    private Session fornisciSessione(String idSessione) {
-        Session sessione = sessionManager.fornisciSessione(idSessione);
-        if (sessione == null) {
-            throw new IllegalStateException("Sessione non valida.");
-        }
-
-        return sessione;
+    public List<String> prelevaComunicazioniCliente(String idSessione) {
+        Session sessione = fornisciSessioneConRuolo(idSessione, RuoloUtente.CLIENTE);
+        return servizioNotifichePrenotazione.prelevaComunicazioniPer(sessione.fornisciUsername());
     }
 
     private Session fornisciSessioneConRuolo(String idSessione, RuoloUtente ruoloRichiesto) {
-        Session sessione = fornisciSessione(idSessione);
+        Session sessione = sessionManager.fornisciSessioneValida(idSessione);
         if (!sessione.verificaRuolo(ruoloRichiesto)) {
             throw new IllegalStateException("Sessione non valida per l'operazione richiesta.");
         }

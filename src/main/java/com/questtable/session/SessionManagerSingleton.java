@@ -44,6 +44,15 @@ public class SessionManagerSingleton {
         return sessioniAttive.get(idSessione);
     }
 
+    public Session fornisciSessioneValida(String idSessione) {
+        Session sessione = fornisciSessione(idSessione);
+        if (sessione == null) {
+            throw new IllegalStateException("Sessione non valida.");
+        }
+
+        return sessione;
+    }
+
     public void chiudiSessione(String idSessione) {
         sessioniAttive.remove(idSessione);
     }

@@ -2,8 +2,6 @@ CREATE DATABASE IF NOT EXISTS questtable;
 
 USE questtable;
 
-DROP TABLE IF EXISTS notifiche;
-
 CREATE TABLE IF NOT EXISTS utenti (
     username VARCHAR(50) PRIMARY KEY,
     parola_accesso VARCHAR(100) NOT NULL,
@@ -59,7 +57,9 @@ VALUES
     (1, 'Catan', '/com/questtable/images/giochi/catan.png', 4, 3, 'GIOVEDI', '18:00 - 20:00', 12.00),
     (2, 'Catan', '/com/questtable/images/giochi/catan.png', 4, 2, 'SABATO', '21:00 - 23:00', 12.00),
     (3, 'Ticket to Ride', '/com/questtable/images/giochi/ticket-to-ride.png', 5, 1, 'VENERDI', '19:00 - 21:00', 10.00),
-    (4, 'Pandemic', '/com/questtable/images/giochi/pandemic.png', 4, 0, 'DOMENICA', '17:00 - 19:00', 8.00)
+    (4, 'Pandemic', '/com/questtable/images/giochi/pandemic.png', 4, 0, 'DOMENICA', '17:00 - 19:00', 8.00),
+    (5, 'Karak II', '/com/questtable/images/giochi/karak-ii.png', 5, 5, 'MARTEDI', '18:30 - 20:30', 9.00),
+    (6, 'Monopoly', '/com/questtable/images/giochi/monopoly.png', 6, 6, 'MERCOLEDI', '20:00 - 22:00', 7.00)
 ON DUPLICATE KEY UPDATE
     titolo_gioco = VALUES(titolo_gioco),
     percorso_immagine = VALUES(percorso_immagine),

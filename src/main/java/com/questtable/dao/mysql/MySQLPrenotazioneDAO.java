@@ -3,6 +3,7 @@ package com.questtable.dao.mysql;
 import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
+import com.questtable.exception.DAOException;
 import com.questtable.model.Cliente;
 import com.questtable.model.DatiPrenotazione;
 import com.questtable.model.Prenotazione;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("SqlResolve")
 public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
     private static final String QUERY_SALVA_PRENOTAZIONE = """
             INSERT INTO prenotazioni (
@@ -90,7 +92,7 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
             statement.executeUpdate();
             prenotazioniInMemoria.put(prenotazione.fornisciIdentificativo(), prenotazione);
         } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile salvare la prenotazione sul database.", exception);
+            throw new DAOException("Impossibile salvare la prenotazione sul database.", exception);
         }
     }
 
@@ -114,7 +116,7 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
 
             return null;
         } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile recuperare la prenotazione dal database.", exception);
+            throw new DAOException("Impossibile recuperare la prenotazione dal database.", exception);
         }
     }
 
@@ -130,7 +132,7 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
                 }
                 storiciClienteCaricati.add(usernameCliente);
             } catch (SQLException exception) {
-                throw new IllegalStateException(
+                throw new DAOException(
                         "Impossibile recuperare le prenotazioni del cliente dal database.",
                         exception
                 );
@@ -159,7 +161,7 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
                 }
                 prenotazioniInAttesaCaricate = true;
             } catch (SQLException exception) {
-                throw new IllegalStateException(
+                throw new DAOException(
                         "Impossibile recuperare le prenotazioni in attesa dal database.",
                         exception
                 );
@@ -187,7 +189,7 @@ public class MySQLPrenotazioneDAO implements IPrenotazioneDAO {
                 confermaPrenotazioneInMemoria(idPrenotazione);
             }
         } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile confermare la prenotazione sul database.", exception);
+            throw new DAOException("Impossibile confermare la prenotazione sul database.", exception);
         }
     }
 

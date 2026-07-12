@@ -1,6 +1,7 @@
 package com.questtable.dao.file_system;
 
 import com.questtable.dao.ISessioneTavoloDAO;
+import com.questtable.exception.DAOException;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.model.Gioco;
 import com.questtable.model.SessioneTavolo;
@@ -187,7 +188,7 @@ public class FileSystemSessioneTavoloDAO implements ISessioneTavoloDAO {
         try {
             return Files.readAllLines(FileSystemPaths.FILE_TAVOLI);
         } catch (IOException exception) {
-            throw new IllegalStateException("Impossibile leggere l'archivio tavoli.", exception);
+            throw new DAOException("Impossibile leggere l'archivio tavoli.", exception);
         }
     }
 
@@ -195,7 +196,7 @@ public class FileSystemSessioneTavoloDAO implements ISessioneTavoloDAO {
         try {
             Files.write(FileSystemPaths.FILE_TAVOLI, righeTavoli);
         } catch (IOException exception) {
-            throw new IllegalStateException("Impossibile salvare l'archivio tavoli.", exception);
+            throw new DAOException("Impossibile salvare l'archivio tavoli.", exception);
         }
     }
 
@@ -206,7 +207,7 @@ public class FileSystemSessioneTavoloDAO implements ISessioneTavoloDAO {
                 salvaRigheTavoli(creaRigheTavoliIniziali());
             }
         } catch (IOException exception) {
-            throw new IllegalStateException("Impossibile inizializzare l'archivio tavoli.", exception);
+            throw new DAOException("Impossibile inizializzare l'archivio tavoli.", exception);
         }
     }
 
@@ -215,7 +216,9 @@ public class FileSystemSessioneTavoloDAO implements ISessioneTavoloDAO {
                 "1;Catan;/com/questtable/images/giochi/catan.png;4;4;GIOVEDI;18:00 - 20:00;12.0",
                 "2;Catan;/com/questtable/images/giochi/catan.png;4;2;SABATO;21:00 - 23:00;12.0",
                 "3;Ticket to Ride;/com/questtable/images/giochi/ticket-to-ride.png;5;3;VENERDI;19:00 - 21:00;10.0",
-                "4;Pandemic;/com/questtable/images/giochi/pandemic.png;4;0;DOMENICA;17:00 - 19:00;8.0"
+                "4;Pandemic;/com/questtable/images/giochi/pandemic.png;4;0;DOMENICA;17:00 - 19:00;8.0",
+                "5;Karak II;/com/questtable/images/giochi/karak-ii.png;5;5;MARTEDI;18:30 - 20:30;9.0",
+                "6;Monopoly;/com/questtable/images/giochi/monopoly.png;6;6;MERCOLEDI;20:00 - 22:00;7.0"
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.questtable.dao.mysql;
 
 import com.questtable.dao.IUtenteDAO;
+import com.questtable.exception.DAOException;
 import com.questtable.model.Cliente;
 import com.questtable.model.RuoloUtente;
 import com.questtable.model.Utente;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("SqlResolve")
 public class MySQLUtenteDAO implements IUtenteDAO {
     private static final String QUERY_RECUPERA_UTENTE = """
             SELECT username, parola_accesso, ruolo, punti_fedelta
@@ -46,7 +48,7 @@ public class MySQLUtenteDAO implements IUtenteDAO {
 
             return null;
         } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile recuperare l'utente dal database.", exception);
+            throw new DAOException("Impossibile recuperare l'utente dal database.", exception);
         }
     }
 
@@ -60,7 +62,7 @@ public class MySQLUtenteDAO implements IUtenteDAO {
             statement.executeUpdate();
             aggiornaUtenteInMemoria(username, puntiFedelta);
         } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile aggiornare i punti fedelta dell'utente.", exception);
+            throw new DAOException("Impossibile aggiornare i punti fedelta dell'utente.", exception);
         }
     }
 

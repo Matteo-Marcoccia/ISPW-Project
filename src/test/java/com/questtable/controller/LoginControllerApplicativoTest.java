@@ -2,6 +2,7 @@ package com.questtable.controller;
 
 import com.questtable.bean.LoginBean;
 import com.questtable.bean.ProfiloUtenteBean;
+import com.questtable.exception.InvalidCredentialsException;
 import com.questtable.model.RuoloUtente;
 import org.junit.jupiter.api.Test;
 
@@ -29,8 +30,8 @@ class LoginControllerApplicativoTest {
         LoginControllerApplicativo controller = new LoginControllerApplicativo();
         LoginBean loginBean = new LoginBean(USERNAME_CLIENTE, "sbagliata");
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        InvalidCredentialsException exception = assertThrows(
+                InvalidCredentialsException.class,
                 () -> controller.effettuaLogin(loginBean)
         );
 
@@ -42,8 +43,8 @@ class LoginControllerApplicativoTest {
         LoginControllerApplicativo controller = new LoginControllerApplicativo();
         LoginBean loginBean = new LoginBean("nessuno", CREDENZIALE_CLIENTE);
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        InvalidCredentialsException exception = assertThrows(
+                InvalidCredentialsException.class,
                 () -> controller.effettuaLogin(loginBean)
         );
 
@@ -54,8 +55,8 @@ class LoginControllerApplicativoTest {
     void loginRifiutaCredenzialiNonCompilate() {
         LoginControllerApplicativo controller = new LoginControllerApplicativo();
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        InvalidCredentialsException exception = assertThrows(
+                InvalidCredentialsException.class,
                 () -> controller.effettuaLogin(null)
         );
 

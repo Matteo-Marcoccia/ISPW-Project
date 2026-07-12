@@ -19,6 +19,8 @@ final class MessaggiGrafici {
     private static final String INTESTAZIONE_PRENOTAZIONI_IN_ATTESA = "Sono presenti richieste da confermare";
     private static final String TESTO_PRENOTAZIONI_IN_ATTESA =
             "Apri la sezione Conferma prenotazioni in attesa per gestirle.";
+    private static final String TITOLO_COMUNICAZIONI = "Comunicazioni";
+    private static final String INTESTAZIONE_COMUNICAZIONI = "Hai nuove comunicazioni";
 
     private MessaggiGrafici() {
     }
@@ -41,6 +43,10 @@ final class MessaggiGrafici {
                 INTESTAZIONE_PRENOTAZIONI_IN_ATTESA,
                 TESTO_PRENOTAZIONI_IN_ATTESA
         );
+    }
+
+    static void mostraComunicazioni(String contenuto) {
+        mostraInformazione(TITOLO_COMUNICAZIONI, INTESTAZIONE_COMUNICAZIONI, contenuto);
     }
 
     private static void mostraInformazione(String titolo, String intestazione, String contenuto) {

@@ -3,6 +3,7 @@ package com.questtable.dao.file_system;
 import com.questtable.dao.IPrenotazioneDAO;
 import com.questtable.dao.ISessioneTavoloDAO;
 import com.questtable.dao.IUtenteDAO;
+import com.questtable.exception.DAOException;
 import com.questtable.model.Cliente;
 import com.questtable.model.DatiPrenotazione;
 import com.questtable.model.Prenotazione;
@@ -221,7 +222,7 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
         try {
             return Files.readAllLines(FileSystemPaths.FILE_PRENOTAZIONI);
         } catch (IOException exception) {
-            throw new IllegalStateException("Impossibile leggere l'archivio prenotazioni.", exception);
+            throw new DAOException("Impossibile leggere l'archivio prenotazioni.", exception);
         }
     }
 
@@ -229,7 +230,7 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
         try {
             Files.write(FileSystemPaths.FILE_PRENOTAZIONI, righePrenotazioni);
         } catch (IOException exception) {
-            throw new IllegalStateException("Impossibile salvare l'archivio prenotazioni.", exception);
+            throw new DAOException("Impossibile salvare l'archivio prenotazioni.", exception);
         }
     }
 
@@ -240,7 +241,7 @@ public class FileSystemPrenotazioneDAO implements IPrenotazioneDAO {
                 salvaRighePrenotazioni(new ArrayList<>());
             }
         } catch (IOException exception) {
-            throw new IllegalStateException("Impossibile inizializzare l'archivio prenotazioni.", exception);
+            throw new DAOException("Impossibile inizializzare l'archivio prenotazioni.", exception);
         }
     }
 }

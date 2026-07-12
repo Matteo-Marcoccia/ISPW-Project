@@ -1,6 +1,7 @@
 package com.questtable.dao.mysql;
 
 import com.questtable.dao.ISessioneTavoloDAO;
+import com.questtable.exception.DAOException;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.model.Gioco;
 import com.questtable.model.SessioneTavolo;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("SqlResolve")
 public class MySQLSessioneTavoloDAO implements ISessioneTavoloDAO {
     private static final String QUERY_BASE_TAVOLI_DISPONIBILI = """
             SELECT id_tavolo, titolo_gioco, percorso_immagine, posti_totali,
@@ -57,7 +59,7 @@ public class MySQLSessioneTavoloDAO implements ISessioneTavoloDAO {
                 }
                 ricercheGiaEseguite.add(chiaveRicerca);
             } catch (SQLException exception) {
-                throw new IllegalStateException("Impossibile recuperare i tavoli disponibili dal database.", exception);
+                throw new DAOException("Impossibile recuperare i tavoli disponibili dal database.", exception);
             }
         }
 
@@ -91,7 +93,7 @@ public class MySQLSessioneTavoloDAO implements ISessioneTavoloDAO {
 
             return null;
         } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile recuperare il tavolo dal database.", exception);
+            throw new DAOException("Impossibile recuperare il tavolo dal database.", exception);
         }
     }
 
@@ -114,7 +116,7 @@ public class MySQLSessioneTavoloDAO implements ISessioneTavoloDAO {
 
             return postiPrenotati;
         } catch (SQLException exception) {
-            throw new IllegalStateException("Impossibile prenotare i posti del tavolo sul database.", exception);
+            throw new DAOException("Impossibile prenotare i posti del tavolo sul database.", exception);
         }
     }
 

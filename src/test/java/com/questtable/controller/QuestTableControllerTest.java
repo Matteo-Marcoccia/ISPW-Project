@@ -8,6 +8,8 @@ import com.questtable.bean.PrenotazioneBean;
 import com.questtable.bean.PreventivoBean;
 import com.questtable.bean.RicercaTavoliBean;
 import com.questtable.bean.RichiestaPreventivoBean;
+import com.questtable.exception.PaymentException;
+import com.questtable.exception.PostiNonDisponibiliException;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.model.MetodoPagamento;
 import org.junit.jupiter.api.Test;
@@ -79,6 +81,19 @@ class QuestTableControllerTest {
     }
 
     @Test
+    void calcolaPreventivoRifiutaPostiNonDisponibili() {
+        QuestTableController controller = new QuestTableController();
+        RichiestaPreventivoBean richiestaPreventivoBean = new RichiestaPreventivoBean(1, 99);
+
+        PostiNonDisponibiliException exception = assertThrows(
+                PostiNonDisponibiliException.class,
+                () -> controller.calcolaPreventivo(richiestaPreventivoBean)
+        );
+
+        assertEquals("Posti non disponibili per il tavolo selezionato.", exception.getMessage());
+    }
+
+    @Test
     void registraPrenotazioneDopoPagamentoValido() {
         QuestTableController controller = new QuestTableController();
         String idSessione = apriSessioneCliente();
@@ -90,6 +105,21 @@ class QuestTableControllerTest {
         assertEquals(USERNAME_CLIENTE, prenotazioneBean.fornisciUsernameCliente());
         assertEquals(TITOLO_CATAN, prenotazioneBean.fornisciTitoloGioco());
     }
+
+    @Test
+    void registraPrenotazioneRifiutaPagamentoNonValido() {
+        QuestTableController controller = new QuestTableController();
+        String idSessione = apriSessioneCliente();
+        PagamentoBean pagamentoBean = new PagamentoBean(2, 1, 12.0f, MetodoPagamento.CARTA_CREDITO, false);
+
+        PaymentException exception = assertThrows(
+                PaymentException.class,
+                () -> controller.registraPrenotazione(idSessione, pagamentoBean)
+        );
+
+        assertEquals("Pagamento non valido.", exception.getMessage());
+    }
+
 
     @Test
     void gestoreRecuperaPrenotazioniInAttesa() {

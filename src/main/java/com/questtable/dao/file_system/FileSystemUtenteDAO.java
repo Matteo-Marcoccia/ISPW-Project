@@ -1,6 +1,7 @@
 package com.questtable.dao.file_system;
 
 import com.questtable.dao.IUtenteDAO;
+import com.questtable.exception.DAOException;
 import com.questtable.model.Cliente;
 import com.questtable.model.RuoloUtente;
 import com.questtable.model.Utente;
@@ -93,7 +94,7 @@ public class FileSystemUtenteDAO implements IUtenteDAO {
         try {
             return Files.readAllLines(FileSystemPaths.FILE_UTENTI);
         } catch (IOException exception) {
-            throw new IllegalStateException("Impossibile leggere l'archivio utenti.", exception);
+            throw new DAOException("Impossibile leggere l'archivio utenti.", exception);
         }
     }
 
@@ -101,7 +102,7 @@ public class FileSystemUtenteDAO implements IUtenteDAO {
         try {
             Files.write(FileSystemPaths.FILE_UTENTI, righeUtenti);
         } catch (IOException exception) {
-            throw new IllegalStateException("Impossibile salvare l'archivio utenti.", exception);
+            throw new DAOException("Impossibile salvare l'archivio utenti.", exception);
         }
     }
 
@@ -112,7 +113,7 @@ public class FileSystemUtenteDAO implements IUtenteDAO {
                 salvaRigheUtenti(creaRigheUtentiIniziali());
             }
         } catch (IOException exception) {
-            throw new IllegalStateException("Impossibile inizializzare l'archivio utenti.", exception);
+            throw new DAOException("Impossibile inizializzare l'archivio utenti.", exception);
         }
     }
 

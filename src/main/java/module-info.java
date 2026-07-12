@@ -8,6 +8,7 @@ module com.questtable {
     exports com.questtable.config;
     exports com.questtable.controller;
     exports com.questtable.dao;
+    exports com.questtable.exception;
     exports com.questtable.model;
     exports com.questtable.session;
     opens com.questtable.main to javafx.graphics;

@@ -5,6 +5,7 @@ import com.questtable.controller.LoginControllerApplicativo;
 import com.questtable.controller.QuestTableController;
 import com.questtable.model.RuoloUtente;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class SchermataHomeCliController {
@@ -158,6 +159,7 @@ public class SchermataHomeCliController {
         if (nuovaSessione != null) {
             idSessione = nuovaSessione;
             mostraAvvisoPrenotazioniInAttesa();
+            mostraComunicazioniCliente();
         }
     }
 
@@ -211,5 +213,22 @@ public class SchermataHomeCliController {
 
         InterazioneConsole.stampaSeparatore();
         InterazioneConsole.stampaMessaggio("Sono presenti prenotazioni in attesa di conferma.");
+    }
+
+    private void mostraComunicazioniCliente() {
+        ProfiloUtenteBean profiloUtente = loginControllerApplicativo.fornisciProfiloUtente(idSessione);
+        if (!profiloUtente.verificaRuolo(RuoloUtente.CLIENTE)) {
+            return;
+        }
+
+        List<String> comunicazioni = questTableController.prelevaComunicazioniCliente(idSessione);
+        if (comunicazioni.isEmpty()) {
+            return;
+        }
+
+        InterazioneConsole.stampaSeparatore();
+        for (String comunicazione : comunicazioni) {
+            InterazioneConsole.stampaMessaggio(comunicazione);
+        }
     }
 }

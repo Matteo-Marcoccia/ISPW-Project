@@ -4,6 +4,7 @@ import com.questtable.bean.LoginBean;
 import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.dao.DAOFactory;
 import com.questtable.dao.IUtenteDAO;
+import com.questtable.exception.InvalidCredentialsException;
 import com.questtable.model.Cliente;
 import com.questtable.model.Utente;
 import com.questtable.session.Session;
@@ -21,23 +22,23 @@ public class LoginControllerApplicativo {
 
     public String effettuaLogin(LoginBean loginBean) {
         if (loginBean == null || !loginBean.verificaCampiCompilati()) {
-            throw new IllegalArgumentException("Credenziali non compilate correttamente.");
+            throw new InvalidCredentialsException("Credenziali non compilate correttamente.");
         }
 
         Utente utente = utenteDAO.recuperaUtente(loginBean.fornisciUsername());
         if (utente == null) {
-            throw new IllegalArgumentException("Utente non registrato.");
+            throw new InvalidCredentialsException("Utente non registrato.");
         }
 
         if (!utente.verificaPassword(loginBean.fornisciPassword())) {
-            throw new IllegalArgumentException("Password non valida.");
+            throw new InvalidCredentialsException("Password non valida.");
         }
 
         return sessionManager.apriSessione(utente);
     }
 
     public ProfiloUtenteBean fornisciProfiloUtente(String idSessione) {
-        Session sessione = fornisciSessione(idSessione);
+        Session sessione = sessionManager.fornisciSessioneValida(idSessione);
         Utente utente = utenteDAO.recuperaUtente(sessione.fornisciUsername());
         if (utente == null) {
             throw new IllegalStateException("Utente collegato alla sessione non trovato.");
@@ -57,14 +58,5 @@ public class LoginControllerApplicativo {
 
     public void effettuaLogout(String idSessione) {
         sessionManager.chiudiSessione(idSessione);
-    }
-
-    private Session fornisciSessione(String idSessione) {
-        Session sessione = sessionManager.fornisciSessione(idSessione);
-        if (sessione == null) {
-            throw new IllegalStateException("Sessione non valida.");
-        }
-
-        return sessione;
     }
 }

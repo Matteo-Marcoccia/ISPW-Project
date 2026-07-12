@@ -18,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.io.IOException;
+import java.util.List;
 
 public class SchermataHomeController {
     private static final String FONT_PRINCIPALE = "Segoe UI";
@@ -79,6 +80,7 @@ public class SchermataHomeController {
                     + "-fx-border-color: rgba(178, 255, 244, 0.45); -fx-border-radius: 16; -fx-border-width: 1;");
             btnStoricoPrenotazioni.setVisible(true);
             btnStoricoPrenotazioni.setManaged(true);
+            pianificaComunicazioniCliente();
             return;
         }
 
@@ -220,5 +222,18 @@ public class SchermataHomeController {
 
     private void pianificaAvvisoPrenotazioniInAttesa() {
         Platform.runLater(this::mostraAvvisoPrenotazioniInAttesa);
+    }
+
+    private void mostraComunicazioniCliente() {
+        List<String> comunicazioni = questTableController.prelevaComunicazioniCliente(idSessione);
+        if (comunicazioni.isEmpty()) {
+            return;
+        }
+
+        MessaggiGrafici.mostraComunicazioni(String.join(System.lineSeparator(), comunicazioni));
+    }
+
+    private void pianificaComunicazioniCliente() {
+        Platform.runLater(this::mostraComunicazioniCliente);
     }
 }
