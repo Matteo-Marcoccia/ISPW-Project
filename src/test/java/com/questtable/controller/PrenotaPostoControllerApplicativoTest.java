@@ -12,7 +12,11 @@ import com.questtable.exception.PaymentException;
 import com.questtable.exception.PostiNonDisponibiliException;
 import com.questtable.model.GiornoSettimana;
 import com.questtable.model.MetodoPagamento;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,6 +30,17 @@ class PrenotaPostoControllerApplicativoTest {
     private static final String USERNAME_GESTORE = "admin";
     private static final String CREDENZIALE_GESTORE = "admin";
     private static final String TITOLO_CATAN = "Catan";
+
+    private final List<String> sessioniAperte = new ArrayList<>();
+
+    @AfterEach
+    void chiudiSessioniAperte() {
+        LoginControllerApplicativo loginControllerApplicativo = new LoginControllerApplicativo();
+        for (String idSessione : sessioniAperte) {
+            loginControllerApplicativo.effettuaLogout(idSessione);
+        }
+        sessioniAperte.clear();
+    }
 
     @Test
     void ricercaTavoliFiltraPerGiocoEGiorno() {
@@ -155,11 +170,19 @@ class PrenotaPostoControllerApplicativoTest {
     }
 
     private String apriSessioneCliente() {
-        return new LoginControllerApplicativo().effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
+        String idSessione = new LoginControllerApplicativo().effettuaLogin(
+                new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE)
+        );
+        sessioniAperte.add(idSessione);
+        return idSessione;
     }
 
     private String apriSessioneGestore() {
-        return new LoginControllerApplicativo().effettuaLogin(new LoginBean(USERNAME_GESTORE, CREDENZIALE_GESTORE));
+        String idSessione = new LoginControllerApplicativo().effettuaLogin(
+                new LoginBean(USERNAME_GESTORE, CREDENZIALE_GESTORE)
+        );
+        sessioniAperte.add(idSessione);
+        return idSessione;
     }
 }
 

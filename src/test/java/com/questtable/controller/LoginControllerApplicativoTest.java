@@ -4,7 +4,11 @@ import com.questtable.bean.LoginBean;
 import com.questtable.bean.ProfiloUtenteBean;
 import com.questtable.exception.InvalidCredentialsException;
 import com.questtable.model.RuoloUtente;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,11 +18,23 @@ class LoginControllerApplicativoTest {
     private static final String USERNAME_CLIENTE = "matteo";
     private static final String CREDENZIALE_CLIENTE = "1234";
 
+    private final List<String> sessioniAperte = new ArrayList<>();
+
+    @AfterEach
+    void chiudiSessioniAperte() {
+        LoginControllerApplicativo loginControllerApplicativo = new LoginControllerApplicativo();
+        for (String idSessione : sessioniAperte) {
+            loginControllerApplicativo.effettuaLogout(idSessione);
+        }
+        sessioniAperte.clear();
+    }
+
     @Test
     void loginClienteRestituisceProfilo() {
         LoginControllerApplicativo controller = new LoginControllerApplicativo();
 
         String idSessione = controller.effettuaLogin(new LoginBean(USERNAME_CLIENTE, CREDENZIALE_CLIENTE));
+        sessioniAperte.add(idSessione);
         ProfiloUtenteBean profiloUtente = controller.fornisciProfiloUtente(idSessione);
 
         assertEquals(USERNAME_CLIENTE, profiloUtente.fornisciUsername());
